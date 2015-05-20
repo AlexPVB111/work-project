@@ -1,0 +1,46 @@
+body {
+--background: url(../img/�3.jpg);
+}
+#container {
+padding-bottom: 50px;
+}
+.span9 {
+background: #fff;
+}
+#next {
+background: #243;
+height: 1px;
+}
+#tab {
+background-color: #999;
+--background-color: #c12;
+border-color: #b11;
+height: 155px;
+}
+#tab thead {
+background: #c12;
+color: #ffc;
+font-size: 30px;
+}
+#tab tbody tr{
+color: #rrr;
+}
+#content table{
+padding-bottom: 50px;
+}
+#myItem {
+color: #c01;
+}
+#myItem2 {
+width: 200px;
+color: #c11 ;
+}
+#but1 {
+width: 200px;
+background: #19c;
+}
+#but2 {
+width: 100px;
+--height: 70px;
+background: #c00s;
+}

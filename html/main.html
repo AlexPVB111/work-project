@@ -1,0 +1,81 @@
+<!doctype HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="style/bootstrap.min.css" />
+	<link rel="stylesheet" href="style/login-style.css" />
+
+	<script src="js/jquery-1.11.2.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/bootstrap-dropdown.js"></script>	
+	<script type="text/javascript" src="web.api.js"></script>
+	<script type="text/javascript" src="web.control.js"></script>
+	
+	<title>Login</title>
+	
+	
+	<script>
+		
+		function getParam(name)
+		{
+			var params = location.search.substring(1).split("&");
+			var variable = "";
+			for(var i = 0; i<params.length; i++)
+			{
+				if(params[i].split("=")[0]==name)
+				{
+					if(params[i].split("=").length>1)
+					variable = params[i].split("=")[1];
+					return variable;
+				}
+			}
+			return "";
+		}
+
+	</script>
+	
+</head>
+<body>
+	<script>
+	/*
+		var result1 = param("par1");
+		var result2 = param("par2");
+		var result3 = param("par3");
+		
+		var d = document.createElement('div');
+        d.style.height = '30px';
+        d.innerText = result1;
+        document.body.appendChild(d);
+		
+		var e = document.createElement('div');
+        d.style.height = '30px';
+        d.innerText = result2;
+        document.body.appendChild(d);
+		
+		var f = document.createElement('div');
+        d.style.height = '30px';
+        d.innerText = result3;
+        document.body.appendChild(d);
+	*/
+		//alert("i am main!");
+		var result = [];
+		//alert("now location is " + location.href);
+		
+		var size = getParam("par0");
+		
+		//var size = onFind('&',location.href );
+		//alert("size is ->" + size);
+		var d;
+		for(var i=1; i<=size; i++){
+			result[i] = getParam("par"+i);
+			//alert("result["+i+"] is -> " + result[i] + " and size is -> " + size);
+			d = document.createElement('div');
+			d.style.height = '30px';
+			d.innerText = result[i];
+			document.body.appendChild(d);
+		}
+		
+		
+	</script>
+</body>
+</html>

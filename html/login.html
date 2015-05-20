@@ -1,0 +1,84 @@
+<!doctype HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="style/bootstrap.css" />
+	<link rel="stylesheet" href="style/login-style.css" />
+	<link rel="stylesheet" href="style/signin.css" />
+
+	<script src="js/jquery-1.11.2.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="web.api.js"></script>
+	<script type="text/javascript" src="web.control.js"></script>
+
+	<title>Login</title>
+	<script type="text/javascript">
+		
+		//document.domain = "localhost.index";
+        function connect() {
+/*
+            var host = document.getElementById("host").value;
+           */
+		  ///*
+		    var database = document.getElementById("database").value;
+			//alert(database);
+            var login = document.getElementById("login").value;
+            var password = document.getElementById("password").value;
+            var useWinAuth = false;
+			//*/
+			//alert(database+" "+login);
+            document.getElementById('connection').innerHTML = 'Connecting...';
+			//control.connectToDatabase('http://localhost:80', 'pilot-ice_ru', login, password, false);
+			control.connectToDatabase('http://localhost:80', database, login, password, false);
+			//control.connectToDatabase('http://localhost:80', 'pilot-ice_ru', 'rogova', '123', false);
+			/* , function (result,info) {
+            //api.connectToDatabase('http://localhost:80', 'pilot-ice_ru', 'sedov', 'GM9d3Lqw', false, function (result,info) {
+            //api.connectToDatabase(host, database, login, password, useWinAuth, function (result) {
+			
+                if (result != 'undefined') {
+                    document.getElementById('connection').innerHTML = 'Подключено';					
+					
+					
+                    if (!IsJsonString(result)) {
+                        document.getElementById('databaseVersion').innerHTML = result;
+                        document.getElementById('databaseId').innerHTML = result;
+                        return;
+                    }
+
+                    var databaseInfo = JSON.parse(result);
+                    document.getElementById('databaseVersion').innerHTML = databaseInfo.DatabaseVersion;
+                    document.getElementById('databaseId').innerHTML = databaseInfo.DatabaseId;
+                    document.getElementById('person').innerHTML = databaseInfo.Person.DisplayName;
+
+                }
+            })
+			*/
+			
+        }
+
+       
+
+    </script>
+</head>
+<body>
+    <div class="container">
+		
+        <h2 align="center">Connection to Pilot v15.0.0154</h2>
+      <form class="form-signin" role="form" id="mainframe">
+		<br></br>
+		<h4 class="form-signin-wrong" id="wrong"></h4>
+        <h4 class="form-signin-heading">Base name</h4>
+        <input class="form-control" placeholder="Base name" required="" autofocus="" type="database" id="database">
+        <h4 class="form-signin-heading">Parameters</h4>
+        <input class="form-control" placeholder="Username" required="" type="login" id="login">
+        <input class="form-control" placeholder="Password" required="" type="password" id="password">
+        <label class="checkbox">
+          <input value="remember-me" type="checkbox"> Remember me
+        </label>
+		<h4 class="form-signin-connection" id="connection"></h4>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="connect()">Login</button>
+      </form>
+	  
+	</div>
+</body>
+</html>
