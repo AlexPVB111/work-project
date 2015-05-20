@@ -65,3 +65,20 @@
 2015/05/08 00:01:39 [alert] 5348#5352: could not respawn worker
 2015/05/09 01:23:28 [alert] 4864#4856: the event "ngx_master_4864" was not signaled for 5s
 2015/05/09 01:23:28 [alert] 4864#4856: could not respawn worker
+2015/05/20 16:32:22 [error] 6396#9324: *2 CreateFile() "C:/nginx/index.html" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET / HTTP/1.1", host: "localhost"
+2015/05/20 16:32:22 [error] 6396#9324: *2 CreateFile() "C:/nginx/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost"
+2015/05/20 16:32:22 [error] 6396#9324: *2 CreateFile() "C:/nginx/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost"
+2015/05/20 16:33:01 [error] 824#3872: *1 CreateFile() "C:/nginx/login1.html" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /login1.html HTTP/1.1", host: "localhost"
+2015/05/20 16:33:57 [error] 824#3872: *2 CreateFile() "C:/nginx/html/login1.html" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /html/login1.html HTTP/1.1", host: "localhost"
+2015/05/20 16:34:09 [error] 824#3872: *2 CreateFile() "C:/nginx/login1.html" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /login1.html HTTP/1.1", host: "localhost"
+2015/05/20 16:47:57 [error] 4024#8376: *1 CreateFile() "C:/nginx/index1.html" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET / HTTP/1.1", host: "localhost"
+2015/05/20 16:48:05 [error] 4024#8376: *1 CreateFile() "C:/nginx/index2.html" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /index2.html HTTP/1.1", host: "localhost"
+2015/05/20 16:48:10 [error] 4024#8376: *1 CreateFile() "C:/nginx/index1.html" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /index1.html HTTP/1.1", host: "localhost"
+2015/05/20 16:49:42 [error] 7556#10188: *1 directory index of "C:/nginx/" is forbidden, client: 127.0.0.1, server: localhost, request: "GET / HTTP/1.1", host: "localhost"
+2015/05/20 16:49:55 [error] 7556#10188: *1 CreateFile() "C:/nginx/login.html" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /login.html HTTP/1.1", host: "localhost"
+2015/05/20 17:01:05 [error] 812#9056: *5 directory index of "C:\nginx/html/" is forbidden, client: 127.0.0.1, server: localhost, request: "GET / HTTP/1.1", host: "localhost"
+2015/05/20 17:21:31 [error] 812#9056: *39 directory index of "C:\nginx/html/" is forbidden, client: 127.0.0.1, server: localhost, request: "GET / HTTP/1.1", host: "localhost"
+2015/05/20 17:21:47 [error] 812#9056: *40 directory index of "C:\nginx/html/" is forbidden, client: 127.0.0.1, server: localhost, request: "GET / HTTP/1.1", host: "localhost"
+2015/05/20 17:21:51 [error] 812#9056: *40 directory index of "C:\nginx/html/" is forbidden, client: 127.0.0.1, server: localhost, request: "GET / HTTP/1.1", host: "localhost"
+2015/05/20 17:21:59 [error] 812#9056: *40 "C:\nginx/html/html/index1.html" is not found (3: The system cannot find the path specified), client: 127.0.0.1, server: localhost, request: "GET /html/ HTTP/1.1", host: "localhost"
+2015/05/20 17:22:26 [error] 812#9056: *40 CreateFile() "C:/nginx/html/index1.html" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /html/index1.html HTTP/1.1", host: "localhost"

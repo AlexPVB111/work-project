@@ -1,5 +1,5 @@
 @ECHO
-start C:\nginx\nginx.exe
+start nginx.exe
 echo 127.0.0.1 -n 1>NULL
 echo Starting nginx
 echo .

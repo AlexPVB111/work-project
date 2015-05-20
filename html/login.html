@@ -20,7 +20,7 @@
             var host = document.getElementById("host").value;
            */
 		  ///*
-		    var database = document.getElementById("database").value;
+		    //var database = document.getElementById("database").value;
 			//alert(database);
             var login = document.getElementById("login").value;
             var password = document.getElementById("password").value;
@@ -28,8 +28,10 @@
 			//*/
 			//alert(database+" "+login);
             document.getElementById('connection').innerHTML = 'Connecting...';
+			//johnraiten 111
+			control.connectToDatabase('http://localhost:80', 'pilot-ice_en', login, password, false);
 			//control.connectToDatabase('http://localhost:80', 'pilot-ice_ru', login, password, false);
-			control.connectToDatabase('http://localhost:80', database, login, password, false);
+			//control.connectToDatabase('http://localhost:80', database, login, password, false);
 			//control.connectToDatabase('http://localhost:80', 'pilot-ice_ru', 'rogova', '123', false);
 			/* , function (result,info) {
             //api.connectToDatabase('http://localhost:80', 'pilot-ice_ru', 'sedov', 'GM9d3Lqw', false, function (result,info) {
