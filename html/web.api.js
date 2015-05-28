@@ -95,68 +95,10 @@ var api = {
                 }
             }
         };
-    },
+    }
 	
-	IsJsonString : function (str) {
-            try {
-                JSON.parse(str);
-            } catch (e) {
-                return false;
-            }
-            return true;
-        },
-		
-		LoadRootObjects : function (callbackFunction)
-        {
-			var cont;
-			var self = this;
-            var guids = [ '00000001-0001-0001-0001-000000000001' ];
-            self.getObjects(guids, function (result) {
 
-                if (!self.IsJsonString(result)) {
-					alert("i am in jsonstr!!!LIMIT OF CONNECTION");
-                    return;
-                }
 
-                var root = JSON.parse(result)[0];
-                var childrenIds = root.Children.Tree;
-                self.getObjects(childrenIds, function (children) {
-                     cont = self.OnChildrenLoaded(JSON.parse(children));
-					 //alert(cont.toString());
-					 callbackFunction(cont);
-                });
-                
-            });
-        },
-
-        OnChildrenLoaded : function (children)
-        {
-			var arrTitles = [];
-			var self = this;
-            for (var i in children) {
-                var val = children[i];
-				arrTitles[i] = self.GetTitle(val.Attributes);
-				//alert("arrTitles " + i + " й - > " + arrTitles[i]);
-				
-                //var d = document.createElement('div');
-                //d.style.height = '30px';
-                //d.innerText = /*JSON.stringify(val);*/GetTitle(val.Attributes);
-				//alert("d.innerText where children -> " + d.innerText);
-                //document.body.appendChild(d);
-
-            }
-			//alert(arrTitles[0]);
-			return arrTitles;
-        },
-
-        GetTitle: function (attributes)
-        {
-            var result = "";
-            for (var i in attributes) {
-                var val = attributes[i];
-                result = result + val.StrValue;
-            }
-            return result;
-        }
+  
 	
 };

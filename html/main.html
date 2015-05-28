@@ -1,9 +1,10 @@
-<!doctype HTML>
+
+<!DOCTYPE html>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" href="style/bootstrap.min.css" />
-	<link rel="stylesheet" href="style/login-style.css" />
+	<link rel="stylesheet" href="style/main-template.css" />
 
 	<script src="js/jquery-1.11.2.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
@@ -12,8 +13,6 @@
 	<script type="text/javascript" src="web.control.js"></script>
 	
 	<title>Login</title>
-	
-	
 	<script>
 		
 		function getParam(name)
@@ -31,51 +30,95 @@
 			}
 			return "";
 		}
+		
+		        function IsJsonString(str) {
+            try {
+                JSON.parse(str);
+            } catch (e) {
+                return false;
+            }
+            return true;
+        }
 
+
+        function LoadRootObjects()
+        {
+            var guids = [ '00000001-0001-0001-0001-000000000001' ];
+            api.getObjects(guids, function (result) {
+
+                if (!IsJsonString(result)) {
+					alert("Limit of connections!");
+                    return;
+                }
+
+                var root = JSON.parse(result)[0];
+                var childrenIds = root.Children.Tree;
+                api.getObjects(childrenIds, function (children) {
+                    OnChildrenLoaded(JSON.parse(children));
+                })
+                
+            })
+        }
+
+        function OnChildrenLoaded(children)
+        {
+			var reference = document.getElementById('spn8');
+            for (var i in children) {
+                var val = children[i];
+
+                var d = document.createElement('div');
+                d.style.height = '30px';
+                d.innerText = /*JSON.stringify(val);*/GetTitle(val.Attributes);
+                reference.appendChild(d);
+
+            }
+        }
+
+        function GetTitle(attributes)
+        {
+            var result = "";
+            for (var i in attributes) {
+                var val = attributes[i];
+                result = result + val.StrValue;
+            }
+            return result;
+        }
+
+		
+		
 	</script>
 	
 </head>
 <body>
-	<script>
-	/*
-		var result1 = param("par1");
-		var result2 = param("par2");
-		var result3 = param("par3");
+    <div class="navbar navbar-default navbar-fixed-top" id="mainbrand">
+      <div class="navbar-inner">
+        <a class="brand" id="brand1">Base version</a>
+		<a class="brand" id="brand2"></a>
+		<p class="navbar-text pull-right" id="inbrand">
+			Logged in as <a  class="navbar-link" id="username">Username</a>
+		</p>
+    </div>
+	<div class="container" id="innerframe">
+		</div>
+			<div class="row-fluid">
+			<div class="span8" id="spn8">
+									
+			</div>
+			<div class="span4"></div>
+		</div>
+	</div>
+<script type="text/javascript">
+
+		var dbv = getParam("par0");
+		var bdid = getParam("par1");
+		var person = getParam("par2");
 		
-		var d = document.createElement('div');
-        d.style.height = '30px';
-        d.innerText = result1;
-        document.body.appendChild(d);
+		document.getElementById('brand1').innerHTML = "Base version: "+dbv;
+		document.getElementById('brand2').innerHTML = "Base id: "+dbv;
+		document.getElementById('username').innerHTML = person;
+		LoadRootObjects();
 		
-		var e = document.createElement('div');
-        d.style.height = '30px';
-        d.innerText = result2;
-        document.body.appendChild(d);
-		
-		var f = document.createElement('div');
-        d.style.height = '30px';
-        d.innerText = result3;
-        document.body.appendChild(d);
-	*/
-		//alert("i am main!");
-		var result = [];
-		//alert("now location is " + location.href);
-		
-		var size = getParam("par0");
-		
-		//var size = onFind('&',location.href );
-		//alert("size is ->" + size);
-		var d;
-		for(var i=1; i<=size; i++){
-			result[i] = getParam("par"+i);
-			//alert("result["+i+"] is -> " + result[i] + " and size is -> " + size);
-			d = document.createElement('div');
-			d.style.height = '30px';
-			d.innerText = result[i];
-			document.body.appendChild(d);
-		}
-		
-		
-	</script>
+</script>
+
 </body>
 </html>

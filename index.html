@@ -1,0 +1,66 @@
+<!doctype HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="html/style/bootstrap.css" />
+	<link rel="stylesheet" href="html/style/login-style.css" />
+	<link rel="stylesheet" href="html/style/signin.css" />
+
+	<script src="html/js/jquery-1.11.2.min.js"></script>
+	<script src="html/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="html/web.api.js"></script>
+	<script type="text/javascript" src="html/web.control.js"></script>
+
+	<title>Login</title>
+	<script type="text/javascript">
+		
+        function connect() {
+
+			//var server = document.getElementById("server").value;
+			//var database = document.getElementById("database").value;
+ 
+            var login = document.getElementById("login").value;
+            var password = document.getElementById("password").value;
+            var useWinAuth = false;
+			
+            document.getElementById('connection').innerHTML = 'Connecting...';
+			//johnraiten 111
+			//control.connectToDatabase('http://localhost:80', 'pilot-ice_en', 'johnraiten', '111', false);
+			control.connectToDatabase('http://localhost:80', 'pilot-ice_en', login, password, false);
+			//control.connectToDatabase('http://localhost:80', 'pilot-ice_ru', login, password, false);
+			//control.connectToDatabase('http://localhost:80', database, login, password, false);
+			//control.connectToDatabase('http://localhost:80', 'pilot-ice_ru', 'rogova', '123', false);
+
+
+			//control.connectToDatabase( 'http://localhost:80', 'pilot-ice_ru', login, password, useWinAuth);
+			
+        }
+
+       
+
+    </script>
+</head>
+<body>
+    <div class="container">
+		
+        <h2 align="center">Connection to Pilot v15.0.0154</h2>
+      <form class="form-signin" role="form" id="mainframe">
+		<br></br>
+		<h4 class="form-signin-wrong" id="wrong"></h4>
+        <h4 class="form-signin-heading">Server name</h4>
+        <input class="form-control" placeholder="Server name" required="" autofocus="" type="server" id="server">
+        <h4 class="form-signin-heading">Base name</h4>
+        <input class="form-control" placeholder="Base name" required="" type="database" id="database">
+        <h4 class="form-signin-heading">Parameters</h4>
+        <input class="form-control" placeholder="Username" required="" type="login" id="login">
+        <input class="form-control" placeholder="Password" required="" type="password" id="password">
+        <label class="checkbox">
+          <input value="remember-me" type="checkbox"> Remember me
+        </label>
+		<h4 class="form-signin-connection" id="connection"></h4>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="connect()">Login</button>
+      </form>
+	  
+	</div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+.span4 {
+background: #F8F8F8 ;
+height: 500px;
+}
+.span8{
+background-color: #F8F8F8 ;
+height: 500px;
+}
+.footer {
+height: 100px;
+width: 100%;
+position: absolute;
+bottom: 0;
+} 
+.navbar-inner {
+	
+}
+#innerframe {
+	margin: 5px;
+}
+#brand1, #brand2, #mainbrand, #inbrand {
+	padding-left: 10px;
+	padding-right: 10px;
+	margin: 10px;
+}
+#spn8 {
+	padding-left: 10px;
+	padding-top: 10px;
+}
