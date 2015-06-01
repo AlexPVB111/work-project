@@ -15,36 +15,21 @@
 	<script type="text/javascript">
 		
         function connect() {
-	/*
-			//
+
 			var database = document.getElementById("database").value;
  
             var login = document.getElementById("login").value;
-			//var password = "";
             var password = document.getElementById("password").value;
-	       // password = password.toString();
-			 
             var useWinAuth = false;
-		/*	
-			var a1=database;
-			var a2=login;
-			var a3=password;
-	  	*/
-			//document.getElementById("database").disabled = "disabled";
- /*
-            document.getElementById("login").disabled = "disabled";
-            document.getElementById("password").disabled = "disabled";	
-            document.getElementById('connection').disabled = "disabled";
-			*/
-			//control.connectToDatabase('http://localhost:80', a1, a2, a3, false);
+			
+            document.getElementById('connection').innerHTML = 'Connecting...';
 			//johnraiten 111
 			//control.connectToDatabase('http://localhost:80', 'pilot-ice_en', 'johnraiten', '111', false);
 			//control.connectToDatabase('http://localhost:80', 'pilot-ice_en', login, password, false);
 			//control.connectToDatabase('http://localhost:80', 'pilot-ice_ru', login, password, false);
-			//control.connectToDatabase('http://localhost:80', database, login, password, false);
-			control.connectToDatabase('http://localhost:80', 'pilot-ice_ru', 'rogova', '123', false);
-			
-			
+			control.connectToDatabase('http://localhost:80', database, login, password, false);
+			//control.connectToDatabase('http://localhost:80', 'pilot-ice_ru', 'rogova', '123', false);
+
 
 			//control.connectToDatabase( 'http://localhost:80', 'pilot-ice_ru', login, password, useWinAuth);
 			
@@ -55,21 +40,14 @@
     </script>
 </head>
 <body>
-
-	<script>
-		// try get version of pilot-ice server
-		control.getVersion();
-	</script>
-
     <div class="container">
-		<h2 align="center">
-        <tt  class="mainhead" id="pilotversion"> Please wait a moment. I am defining the version of Pilot-Server </tt>
-		</h2>
+		
+        <h2 align="center">Connection to Pilot v15.0.0154</h2>
       <form class="form-signin" role="form" id="mainframe">
-		<br><br/>
+		<br></br>
 		<h4 class="form-signin-wrong" id="wrong"></h4>
         <h4 class="form-signin-heading">Base name</h4>
-        <input class="form-control" placeholder="Base name" required="" autofocus="" type="database" id="database">
+        <input class="form-control" placeholder="Base name" autofocus="" required="" type="database" id="database">
         <h4 class="form-signin-heading">Parameters</h4>
         <input class="form-control" placeholder="Username" required="" type="login" id="login">
         <input class="form-control" placeholder="Password" required="" type="password" id="password">
