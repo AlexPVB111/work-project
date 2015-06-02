@@ -15,23 +15,7 @@
 	<title>Login</title>
 	<script>
 		
-		function getParam(name)
-		{
-			var params = location.search.substring(1).split("&");
-			var variable = "";
-			for(var i = 0; i<params.length; i++)
-			{
-				if(params[i].split("=")[0]==name)
-				{
-					if(params[i].split("=").length>1)
-					variable = params[i].split("=")[1];
-					return variable;
-				}
-			}
-			return "";
-		}
-		
-		        function IsJsonString(str) {
+		function IsJsonString(str) {
             try {
                 JSON.parse(str);
             } catch (e) {
@@ -84,7 +68,15 @@
             return result;
         }
 
-		
+		// возвращает cookie с именем name, если есть, если нет, то undefined
+		function getCookie(name) {
+		  var results = document.cookie.match ( '(^|;) ?' + name + '=([^;]*)(;|$)' );
+		 
+		  if ( results )
+		    return ( unescape ( results[2] ) );
+		  else
+		    return null;
+		}
 		
 	</script>
 	
@@ -92,8 +84,7 @@
 <body>
     <div class="navbar navbar-default navbar-fixed-top" id="mainbrand">
       <div class="navbar-inner">
-        <a class="brand" id="brand1">Base version</a>
-		<a class="brand" id="brand2"></a>
+		<a class="brand" id="brand"></a>
 		<p class="navbar-text pull-right" id="inbrand">
 			Logged in as <a  class="navbar-link" id="username">Username</a>
 		</p>
@@ -108,14 +99,9 @@
 		</div>
 	</div>
 <script type="text/javascript">
-
-		var dbv = getParam("par0");
-		var bdid = getParam("par1");
-		var person = getParam("par2");
 		
-		document.getElementById('brand1').innerHTML = "Base version: "+dbv;
-		document.getElementById('brand2').innerHTML = "Base id: "+dbv;
-		document.getElementById('username').innerHTML = person;
+		document.getElementById('brand').innerHTML = "Base id: "+getCookie('databaseId');
+		document.getElementById('username').innerHTML = getCookie('userName');
 		LoadRootObjects();
 		
 </script>

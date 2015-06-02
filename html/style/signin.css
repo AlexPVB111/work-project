@@ -9,11 +9,12 @@ body {
   padding: 15px;
   margin: 0 auto;  
 }
-.form-signin .form-signin-heading,
-.form-signin .checkbox {
+.form-signin .form-signin-heading {
+  font-size: 19px;
+  margin-top: 10px;
   margin-bottom: 10px;
 }
-.form-signin .checkbox {
+.form-signin {
   font-weight: normal;
 }
 .form-signin .form-control {
@@ -29,7 +30,7 @@ body {
   z-index: 2;
 }
 .form-signin input[type="database"] {
-  margin-bottom: -1px;
+  margin-bottom: 20px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
@@ -39,6 +40,7 @@ body {
   border-bottom-left-radius: 0;
 }
 .form-signin input[type="password"] {
+  margin-top: 10px;
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
@@ -50,4 +52,19 @@ body {
 }
 .form-signin-wrong {
 	color: #FF0000; 
+	margin-top: 10px;
+	margin-bottom: 20px;
+	font-size: 20px;
 }
+.row-fluid{
+	margin-top: 30px;
+}
+#connection{
+	float: left;
+	min-width: 40%;
+}
+#btn{
+	max-width: 50%;
+	float: right;
+}
+
