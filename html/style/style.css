@@ -1,46 +1,229 @@
+a {
+	color: #36C;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #3377DD;
+	text-decoration: none;
+}
+
+img {
+	border: 0px
+}
+
 body {
---background: url(../img/�3.jpg);
+	background: #FFF;
+	color: #666666;
+	text-align: center;
+	font-family: 'Segoe UI';
 }
-#container {
-padding-bottom: 50px;
+
+.header {
+	text-align: left;
 }
-.span9 {
-background: #fff;
+
+.companyName {
+	font-weight: normal;
+	font-size: 13pt;
+	color: silver;
+	padding: 0;
+	margin: 0 0 16px;
 }
-#next {
-background: #243;
-height: 1px;
+
+.projectTitle {
+	color: #333333;
+	font-family: 'Segoe UI Light', 'Segoe UI';
+	font-size: 26px;
+	font-weight: normal;
+	word-break: break-word;
 }
-#tab {
-background-color: #999;
---background-color: #c12;
-border-color: #b11;
-height: 155px;
+
+.currentFolder {	
+	font-size: 13px;
+	color: #333333;
+	font-weight: normal;
+	padding: 0;
+	margin-top: 16px;
+	margin-bottom: 30px;
+	word-break: break-word;
 }
-#tab thead {
-background: #c12;
-color: #ffc;
-font-size: 30px;
+
+/* main */
+.main {
+	margin: 30px;
+	background: #FFF;
 }
-#tab tbody tr{
-color: #rrr;
+
+/* title */
+
+/*content*/
+.content {
+	clear: both;
 }
-#content table{
-padding-bottom: 50px;
+
+.doc {
+	display:block;
+	background: #FFF;
+	font-size: 12px;
+	color: #666666;
+	float: left;
+	width: 400px;
+	height: 360px;
+	margin-right: 30px;
+	margin-bottom: 30px;
+	overflow: auto;
 }
-#myItem {
-color: #c01;
+
+.doc:hover {
+	color: #666666;
 }
-#myItem2 {
-width: 200px;
-color: #c11 ;
+
+.docLinkImg {
+	border: 1px solid #DBD3D3;
+	width: 398px;
+	height: 298px;
+	background: #EEEEEE;
+	white-space: nowrap;
+	text-align: center;	
 }
-#but1 {
-width: 200px;
-background: #19c;
+
+.helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
 }
-#but2 {
-width: 100px;
---height: 70px;
-background: #c00s;
+
+.docLinkImg:hover {
+	border: 1px solid #000;
+}
+
+.doc:hover > .docLinkImg{
+	border: 1px solid #000;
+}
+
+.docLinkText {
+	width: 398px;
+	height: 58px;
+	text-align: left;
+	overflow: hidden;
+	float: left;
+}
+
+.docLinkText p {
+  margin: 0;
+  padding: 6px;
+  overflow: hidden;
+  word-wrap: normal;
+  text-overflow: ellipsis;
+}
+
+.doc img {
+	max-height: 298px;
+	max-width: 398px;
+	vertical-align: middle;
+	margin-left: -4;
+}
+
+.folder {
+	display: inline;
+	background: #B0E0E6;
+	color: #666666;
+	font-size: 12px;
+	float: left;
+	width: 398px;
+	height: 60px;	
+	margin-right: 26px;
+	margin-bottom: 20px;
+}
+/*
+.folder:hover  input { visibility: visible; }
+*/
+.folderLink {
+	display:inline;
+	background: #B0E0E6;
+	color: #666666;
+	font-size: 12px;
+	float: left;
+	width: 398px;
+	height: 60px;	
+	border: 1px solid #DBD3D3; 
+	overflow: visible;
+}
+
+.childrenCount {
+	position: absolute; 
+	left:3px; 
+	bottom:1px;
+	font-size:8pt;
+}
+
+.folderLink:hover {
+	border: 1px solid #000;	
+	color: #345765;
+}
+
+.folderLinkImg {
+	height: 60px;
+	width: 60px;
+	background:#87CEEB;
+	display: inline;
+	float: left;
+	text-align: center;
+	position: relative; 
+}
+
+.folderLink img {
+	background: #87CEEB;
+	margin-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+	height: 32px;
+	width: 32px;
+}
+
+.folderLinkText {
+	height: 60px;
+	text-align: left;
+	width: 308px;
+	overflow: hidden;
+	float: left;
+	position: relative; 
+}
+
+.folderLinkText p {
+  margin-top: 5px;
+  margin-left: 10px;
+	max-width: 318px;
+    max-height: 50%;
+    margin: 10;
+    padding: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.clear { 
+	clear: both; 
+	height: 50px;
+	_height: 50px;
+}
+
+.clearfix{ 
+	clear: both; 
+}
+
+.folder input {	
+	position: relative; 
+	float: right;
+	top: -60px;
+	right: 5px;
+	visibility: hidden;
+
+}
+.folder input  :hover +.folderLink {
+}
+.folder:hover  .folderLink { 
+	border: 1px solid #000;	
+	color: #345765;
 }

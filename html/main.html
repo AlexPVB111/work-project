@@ -2,9 +2,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" href="style/bootstrap.min.css" />
 	<link rel="stylesheet" href="style/main-template.css" />
+    <link type="text/css" href="style/style.css" rel="stylesheet" />
 
 	<script src="js/jquery-1.11.2.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
@@ -34,7 +36,6 @@
 					alert("Incorrect data format!");
                     return;
                 }
-
                 var root = JSON.parse(result)[0];
                 var childrenIds = root.Children.Tree;
                 api.getObjects(childrenIds, function (children) {
@@ -46,14 +47,22 @@
 
         function OnChildrenLoaded(children)
         {
-			var reference = document.getElementById('spn8');
+			var count = 10;
+			var text;
+	//		var reference = document.getElementById('content');
             for (var i in children) {
                 var val = children[i];
-
+/*
                 var d = document.createElement('div');
                 d.style.height = '30px';
-                d.innerText = /*JSON.stringify(val);*/GetTitle(val.Attributes);
+                d.innerText = GetTitle(val.Attributes);
                 reference.appendChild(d);
+*/			
+			
+                text = GetTitle(val.Attributes);
+				createItem('content', i, 'style/Biohazard.png', 'style/futurama1.svg');
+				addEventListener(i);
+				addInnerFolderContent(i, count, text);
 
             }
         }
@@ -78,27 +87,217 @@
 		    return null;
 		}
 		
+		function mouseenterVisible(event){
+		
+			var myId = {};
+			if(!tryGetId(event, myId)){
+				alert('I can\'t get element\'s id!');
+				return;
+			}
+			var div = document.getElementById(myId.id);
+			var elems = div.getElementsByTagName('input');
+			for(var i=0; i<elems.length; i++) 
+				document.getElementById(elems[i].id).style.visibility = "visible";
+		}
+		
+		function mouseleaveVisible(event){
+		
+			var myId ={};
+			if(!tryGetId(event, myId)){
+				alert('I can\'t get element\'s id!');
+				return;
+			}
+			var div = document.getElementById(myId.id);
+			var elems = div.getElementsByTagName('input');
+
+			for(var i=0; i<elems.length; i++) {
+				if(document.getElementById(elems[i].id).checked)
+					document.getElementById(elems[i].id).style.visibility = "visible";	
+				else
+					document.getElementById(elems[i].id).style.visibility = "hidden";			
+			}
+		}
+		
+		function tryGetId(event, myId){
+			try{
+				event = event || window.event;
+				// Теперь event - объект события во всех браузерах.
+				var sender = event.srcElement || event.target;
+				myId.id = sender.id;
+				return true;
+			}catch(e){
+				return false; 
+			}
+		}
+		
+		function createElement( name, attributes ) {
+		    var el = document.createElement( name );
+		    if ( typeof attributes == 'object' ) {
+				for ( var i in attributes ) {
+					el.setAttribute( i, attributes[i] );
+
+					if ( i.toLowerCase() == 'class' ) {
+						el.className = attributes[i];  
+					} else if ( i.toLowerCase() == 'src' ) {
+						el.src = attributes[i]; 
+					} else if ( i.toLowerCase() == 'href' ) {
+						el.href = attributes[i]; 
+					} else if ( i.toLowerCase() == 'alt' ) {
+						el.alt = attributes[i]; 
+					} else if ( i.toLowerCase() == 'type' ) {
+						el.type = attributes[i]; 
+					}
+				}
+			}
+			for ( var i = 2; i<arguments.length; i++ ) {
+				var val = arguments[i];
+				if ( typeof val == 'string' ) { val = document.createTextNode( val ) };
+				el.appendChild( val );
+			}
+			return el;
+		}
+		
+		function createItem(parentId, i, ihref, isrc){
+		
+			var holder = document.getElementById( parentId );
+			if( holder != null ){
+				var folder;
+				var img, div, input;
+				try{
+					holder.appendChild( 
+						folder = 
+							createElement( "div", {id: 'folder'+i, class: 'folder'}, 
+								createElement( "a", {id: 'folderLink'+i, class: 'folderLink' , href: ihref},
+									createElement( "div", {id: 'folderLinkImg'+i, class: 'folderLinkImg'}, 
+										createElement( "div", { id: 'childrenCount'+i, class: 'childrenCount' }
+										),
+										img = 
+										createElement( "img", {src: isrc, alt: ''}
+										)				
+									),
+									div = 
+									createElement( "div", {id: 'folderLinkText'+i, class: 'folderLinkText'},
+										createElement( "p", {id: 'folderLinkTextp'+i}
+										)
+									)
+								),		
+								input = 
+								createElement( "input", {id: 'input'+i, type: 'checkbox'}
+								)			
+							)
+					);
+				}catch(e){
+					alert('Errror! I can\'t create and element');
+				}
+			}else
+				return false;
+		}
+		
+		function addEventListener(i){
+		
+			try{
+				document.getElementById('folder' + i).addEventListener("mouseenter", mouseenterVisible);
+				document.getElementById('folder' + i).addEventListener("mouseleave", mouseleaveVisible);
+				return true;
+			}catch(e){
+				return false;
+			}
+		}
+		
+		function addInnerFolderContent( i, childrenCount, folderLinkTextp){
+			
+			try{
+				document.getElementById('childrenCount' + i).innerHTML = childrenCount;
+				document.getElementById('folderLinkTextp' + i).innerHTML = folderLinkTextp;
+				return true;
+			}catch(e){
+				return false;
+			}		
+		}
+		
 	</script>
 	
 </head>
 <body>
-    <div class="navbar navbar-default navbar-fixed-top" id="mainbrand">
-      <div class="navbar-inner">
-		<a class="brand" id="brand"></a>
-		<p class="navbar-text pull-right" id="inbrand">
-			Logged in as <a  class="navbar-link" id="username">Username</a>
-		</p>
-    </div>
-	<div class="container" id="innerframe">
+
+	<div class="navbar navbar-default" id="mainbrand">
+		<div class="navbar-inner">
+			<a class="brand" id="brand"></a>
+			<p class="navbar-text pull-right" id="inbrand">
+				Logged in as <a  class="navbar-link" id="username">Username</a>
+			</p>
 		</div>
-			<div class="row-fluid">
-			<div class="span8" id="spn8">
-									
+
+		<div class="main" id="main">
+
+		  <div class="header">
+
+			
+		</div>
+		   </div>
+			<div class="content foldersContent" id="content">
+			
+			
+			
+		<!--	
+				<div class="folder" id="f1" onmouseenter="mouseenterVisible(event)" onmouseleave="mouseleaveVisible(event)">
+					<a href="Архитектурные решения/_start.html" class="folderLink" >
+						<div class="folderLinkImg">
+							<div class="childrenCount">4</div>
+							<img src="style/fry2.svg" alt="" />
+						</div>
+						<div class="folderLinkText">
+							<p>Архитектурные решения </p>
+						</div>
+					</a>
+					<input type="checkbox"  id="1">						  
+				</div>
+				<div class="folder" id="f2" onmouseenter="mouseenterVisible(event)" onmouseleave="mouseleaveVisible(event)">
+					<a href="Технология производства/_start.html" class="folderLink">			  
+						<div class="folderLinkImg">
+							<div class="childrenCount">4</div>
+							<img src="style/futurama1.svg" alt="" />
+						</div>
+						<div class="folderLinkText">
+							<p>Технология производства		
+								df dfg df df dfg esdg df dfg  jhkj9908 hfg cnb,mml; jhiuy hgjg
+							</p>
+						</div>			  	
+					</a>
+					<input type="checkbox"  id="2">	
+				</div>
+				<div class="folder" id="f3" onmouseenter="mouseenterVisible(event)" onmouseleave="mouseleaveVisible(event)">
+					<a href="→ Рекомендации пользователям AutoC~/_start.html" class="folderLink">
+						<div class="folderLinkImg">
+							<div class="childrenCount">1</div>
+							<img src="style/→ Рекомендации пользователям AutoC~.svg" alt="" />
+						</div>
+						<div class="folderLinkText">
+							<p>→ Рекомендации пользователям AutoCAD</p>
+						</div>
+					</a>
+					<input type="checkbox"  id="3">	
+				</div>
+		-->		
 			</div>
-			<div class="span4"></div>
-		</div>
-	</div>
+
+			<div class="clearfix"></div>
+			<div class="content documentsContent"></div>
+			<div class="clearfix"></div>
+	</div>	
+
+
+	<div class="clear"></div>
 <script type="text/javascript">
+/*		
+		var count = 11;
+		var text = 'Какой-то внутренни текст';
+		for(var i=4; i<60; i++){
+				createItem('content', i, 'style/Biohazard.png', 'style/fry2.svg');
+				addEventListener(i);
+				addInnerFolderContent(i, count, text);
+		}
+*/		
 		
 		document.getElementById('brand').innerHTML = "Base id: "+getCookie('databaseId');
 		document.getElementById('username').innerHTML = getCookie('userName');

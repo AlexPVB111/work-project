@@ -22,8 +22,6 @@ var control = {
 									document.cookie = "userName=" + person;
 									document.cookie = "databaseId=" + bdid;
 									document.location.href = "html/main.html";
-									//передача в качестве параметров: версии дб, id дб, имени пользователя									
-									//document.location.href = "html/main.html?par0="+dbv+"&par1="+bdid+"&par2="+person;
 								}
 								else{
 									document.getElementById('connection').innerHTML = '';

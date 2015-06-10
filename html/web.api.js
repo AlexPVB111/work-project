@@ -126,12 +126,6 @@ var api = {
 		  else
 			callbackFunction( 'I can\'t connect to Pilot-Server ' + this.responseText );
 		}
-
-		/*
-		xhr.onerror = function() {
-		  callbackFunction( 'Error!' + this.status );
-		}
-		*/
 		
 		xhr.send();
 		
