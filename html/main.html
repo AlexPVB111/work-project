@@ -47,12 +47,13 @@
 
         function OnChildrenLoaded(children)
         {
-			var count = 10;
+			var count = 100500;
 			var text;
             for (var i in children) {
                 var val = children[i];
 	
-			
+				//alert('children['+i+'] = ' + (children[i].Children.Tree).length);
+				count = (children[i].Children.Tree).length;
                 text = GetTitle(val.Attributes);
 				createItem('content', i, 'style/Biohazard.png', 'style/futurama1.svg');
 				addEventListener(i);
@@ -224,21 +225,17 @@
 
 		<div class="main" id="main">
 
-		  <div class="header">
-
-			
-		</div>
-		   </div>
-			<div class="content foldersContent" id="content">
-			
-			
-			
+			<div class="header">
 	
 			</div>
+		</div>
+		<div class="content foldersContent" id="content">
+			
+		</div>
 
-			<div class="clearfix"></div>
-			<div class="content documentsContent"></div>
-			<div class="clearfix"></div>
+		<div class="clearfix"></div>
+		<div class="content documentsContent"></div>
+		<div class="clearfix"></div>
 	</div>	
 
 
