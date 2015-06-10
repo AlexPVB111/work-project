@@ -49,15 +49,9 @@
         {
 			var count = 10;
 			var text;
-	//		var reference = document.getElementById('content');
             for (var i in children) {
                 var val = children[i];
-/*
-                var d = document.createElement('div');
-                d.style.height = '30px';
-                d.innerText = GetTitle(val.Attributes);
-                reference.appendChild(d);
-*/			
+	
 			
                 text = GetTitle(val.Attributes);
 				createItem('content', i, 'style/Biohazard.png', 'style/futurama1.svg');
@@ -239,46 +233,7 @@
 			
 			
 			
-		<!--	
-				<div class="folder" id="f1" onmouseenter="mouseenterVisible(event)" onmouseleave="mouseleaveVisible(event)">
-					<a href="Архитектурные решения/_start.html" class="folderLink" >
-						<div class="folderLinkImg">
-							<div class="childrenCount">4</div>
-							<img src="style/fry2.svg" alt="" />
-						</div>
-						<div class="folderLinkText">
-							<p>Архитектурные решения </p>
-						</div>
-					</a>
-					<input type="checkbox"  id="1">						  
-				</div>
-				<div class="folder" id="f2" onmouseenter="mouseenterVisible(event)" onmouseleave="mouseleaveVisible(event)">
-					<a href="Технология производства/_start.html" class="folderLink">			  
-						<div class="folderLinkImg">
-							<div class="childrenCount">4</div>
-							<img src="style/futurama1.svg" alt="" />
-						</div>
-						<div class="folderLinkText">
-							<p>Технология производства		
-								df dfg df df dfg esdg df dfg  jhkj9908 hfg cnb,mml; jhiuy hgjg
-							</p>
-						</div>			  	
-					</a>
-					<input type="checkbox"  id="2">	
-				</div>
-				<div class="folder" id="f3" onmouseenter="mouseenterVisible(event)" onmouseleave="mouseleaveVisible(event)">
-					<a href="→ Рекомендации пользователям AutoC~/_start.html" class="folderLink">
-						<div class="folderLinkImg">
-							<div class="childrenCount">1</div>
-							<img src="style/→ Рекомендации пользователям AutoC~.svg" alt="" />
-						</div>
-						<div class="folderLinkText">
-							<p>→ Рекомендации пользователям AutoCAD</p>
-						</div>
-					</a>
-					<input type="checkbox"  id="3">	
-				</div>
-		-->		
+	
 			</div>
 
 			<div class="clearfix"></div>
@@ -289,16 +244,7 @@
 
 	<div class="clear"></div>
 <script type="text/javascript">
-/*		
-		var count = 11;
-		var text = 'Какой-то внутренни текст';
-		for(var i=4; i<60; i++){
-				createItem('content', i, 'style/Biohazard.png', 'style/fry2.svg');
-				addEventListener(i);
-				addInnerFolderContent(i, count, text);
-		}
-		//
-*/		
+
 		
 		document.getElementById('brand').innerHTML = "Base id: "+getCookie('databaseId');
 		document.getElementById('username').innerHTML = getCookie('userName');
