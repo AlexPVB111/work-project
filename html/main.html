@@ -4,7 +4,7 @@
 <head>
 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link rel="stylesheet" href="style/bootstrap.min.css" />
+	<link rel="stylesheet" href="style/bootstrap.min1.css" />
 	<link rel="stylesheet" href="style/main-template.css" />
     <link type="text/css" href="style/style.css" rel="stylesheet" />
 
@@ -33,10 +33,19 @@
             api.getObjects(guids, function (result) {
 
                 if (!IsJsonString(result)) {
-					alert("Incorrect data format!");
+					alert("Incorrect data format");
                     return;
                 }
+
                 var root = JSON.parse(result)[0];
+
+				// создание корневой "крошки"
+				var partOfRootBreadCrumbId = 'root';
+				var rootBreadCrumbLabel = 'Корневая папка';
+				createBreadCrumb('navigation', partOfRootBreadCrumbId, '#');
+				addBreadCrumbContent(partOfRootBreadCrumbId, rootBreadCrumbLabel, root.Id);
+				addBreadCrumbEventListener(partOfRootBreadCrumbId);
+				
                 var childrenIds = root.Children.Tree;
                 api.getObjects(childrenIds, function (children) {
                     OnChildrenLoaded(JSON.parse(children));
@@ -49,26 +58,61 @@
         {
 			var count = 100500;
 			var text;
+			var childrenIds;
+			var typeId;
+            var val;
+			
             for (var i in children) {
-                var val = children[i];
-	
-				//alert('children['+i+'] = ' + (children[i].Children.Tree).length);
+				val = children[i];
+				typeId = children[i].TypeId;
 				count = (children[i].Children.Tree).length;
-                text = GetTitle(val.Attributes);
-				createItem('content', i, 'style/Biohazard.png', 'style/futurama1.svg');
-				addEventListener(i);
-				addInnerFolderContent(i, count, text);
+				text = GetTitle(val.Attributes);
+				api.getMetadata( function(result){
+				
+					if (!IsJsonString(result)) {
+						alert("Incorrect data format!");
+						return;
+					}
+			
+					var root = JSON.parse(result);
+					for (var j in root.Types) {
+						if (root.Types[j].Id == typeId) {
+							icon = root.Types[j].Icon;
+						}
+					}
+					createItem('content', i, 'data:image/svg+xml;base64,' + icon );
+					addFolderEventListener(i);
+					addInnerFolderContent(i, count, text, children[i].Id);
+
+				});
+
 
             }
         }
 
         function GetTitle(attributes)
         {
-            var result = "";
-            for (var i in attributes) {
-                var val = attributes[i];
-                result = result + val.StrValue;
-            }
+            var result = '';
+			var name = '';
+			var customer = '';
+			var project_name = '';
+			var code = '';
+			
+			for (var i in attributes) {
+				if (i == 'name') {
+					if(name != null)
+						name = attributes[i].StrValue;
+				}
+				if (i == 'project_name') {
+					if(project_name != null)
+						project_name = attributes[i].StrValue;
+				}
+				if (i == 'code') {
+					if(code != null)
+						code = attributes[i].StrValue;
+				}
+			}
+			result = code + " " + name + " " + project_name ;
             return result;
         }
 
@@ -86,31 +130,152 @@
 		
 			var myId = {};
 			if(!tryGetId(event, myId)){
-				alert('I can\'t get element\'s id!');
+				alert('I can\'t get element\'s id');
 				return;
 			}
 			var div = document.getElementById(myId.id);
 			var elems = div.getElementsByTagName('input');
 			for(var i=0; i<elems.length; i++) 
 				document.getElementById(elems[i].id).style.visibility = "visible";
+			return true;
 		}
 		
 		function mouseleaveVisible(event){
 		
 			var myId ={};
 			if(!tryGetId(event, myId)){
-				alert('I can\'t get element\'s id!');
+				alert('I can\'t get element\'s id');
 				return;
 			}
 			var div = document.getElementById(myId.id);
 			var elems = div.getElementsByTagName('input');
-
+			
 			for(var i=0; i<elems.length; i++) {
 				if(document.getElementById(elems[i].id).checked)
 					document.getElementById(elems[i].id).style.visibility = "visible";	
 				else
 					document.getElementById(elems[i].id).style.visibility = "hidden";			
 			}
+		}
+		
+		
+		
+		function mouseClickFolderLink(){
+		
+			// получение id элемента, сгенерировавшего событие
+			var myId ={};
+			if(!tryGetId(event, myId)){
+				alert('I can\'t get element\'s id');
+				return;
+			}
+			
+			// получение части id, необходимой для определения id folder, содержащей ids
+			var id = {};
+			if(!tryFindPartId(myId.id, id)){
+				alert('I can\'t find id');
+				return;
+			}			
+			
+			var test = document.getElementById('childrenCount-' + id.partId).innerHTML;
+			if(test != 0){
+			
+			// получение ids	
+				var ids = document.getElementById('folder-' + id.partId).dataset.ids;
+			
+
+			
+			//	получение road			
+				var div = document.getElementById('navigation');
+				var elems = div.getElementsByTagName('LI');
+				var liLength = elems.length - 1;
+				var elemslinks = elems[liLength].getElementsByTagName('A');
+				var aLength = elemslinks.length - 1;
+				var road = elemslinks[aLength].dataset.road;
+
+			// создание и инициализация "крошки"
+				var breadCrumbLabel = document.getElementById('folderLinkTextp-' + id.partId).innerHTML;
+				
+				if(!createBreadCrumb('navigation', road + '' + id.partId, '#')){
+					alert('I can\'t create breadcrumb ');
+					return;
+				}else{
+					if(!addBreadCrumbContent(road + '' + id.partId, breadCrumbLabel, ids)){
+						alert('I can\'t add breadcrumb ');
+						return;
+					}else{
+						addBreadCrumbEventListener(road + '' + id.partId);
+						LoadFolderContent(ids);		
+					}
+				}
+			} else{
+				alert("It\'s file!");
+			}
+		
+		}
+		
+		function LoadFolderContent(ids){
+					
+		// очистка содержимого элемента content
+			document.getElementById("content").innerText = '';
+				
+			ids = [ ids ];
+            api.getObjects(ids, function (result) {
+
+            if (!IsJsonString(result)) {
+				alert("Incorrect data format");
+                return;
+            }
+			
+			var newFolder = JSON.parse(result)[0];
+            var childrenIds = newFolder.Children.Tree;
+            api.getObjects(childrenIds, function (children) {
+                OnChildrenLoaded(JSON.parse(children));
+            })
+  
+            });
+		
+		}
+		
+		
+		function tryFindPartId(str, result){
+		
+			try{
+				var start = str.indexOf('-');
+				result.partId = str.substring(start + 1, str.length);
+				return true;
+			} catch(e){
+				return false;
+			}
+		
+		}
+		
+		function mouseClickBreadCrumb(event){
+		
+			var myId = {};
+			if(!tryGetId(event, myId)){
+				alert('I can\'t get element\'s id');
+				return;
+			}
+			
+			//	получение размера списка			
+			var div = document.getElementById('navigation');
+
+			var length = document.getElementById('navigation').getElementsByTagName('li').length;			
+			var road = document.getElementById(myId.id).dataset.road;
+			var count = (road.split('*').length - 1);
+			
+			for(var i=count-1; i<length-1; i++){
+			
+				var idRemovingElement = document.getElementById('navigation').lastElementChild.id;
+				var removingElement = document.getElementById(idRemovingElement);
+				div.removeChild(removingElement);
+			}
+			
+			// получение ids	
+			var ids = document.getElementById(myId.id).dataset.ids;			
+			
+			LoadFolderContent(ids);	
+
 		}
 		
 		function tryGetId(event, myId){
@@ -152,7 +317,52 @@
 			return el;
 		}
 		
-		function createItem(parentId, i, ihref, isrc){
+		function createBreadCrumb(parentId, i, ihref){
+		
+			var holder = document.getElementById( parentId );
+			if( holder != null ){
+			var list;
+				try{
+					holder.appendChild( 
+						list = 
+							createElement( "li", {id: 'breadcrumb-'+i}, 
+								createElement( "a", {id: 'link-'+i, class: 'link', href: ihref} )
+							)
+					);
+				}catch(e){
+					alert('I can\'t create and add element');
+				}
+				return true;
+			}else
+				return false;
+			
+		}
+		
+		function addBreadCrumbContent(i, content, ids){
+	
+			try{
+				document.getElementById('link-' + i).innerHTML = content;
+				document.getElementById('link-' + i).dataset.ids = ids;
+				document.getElementById('link-' + i).dataset.road =  i + '*';	//*	
+				return true;
+			}catch(e){
+				return false;
+			}	
+		
+		}
+		
+		function addBreadCrumbEventListener(i){
+		
+			try{
+				document.getElementById('link-' + i).addEventListener("click", mouseClickBreadCrumb);
+				return true;
+			}catch(e){
+				return false;
+			}
+		}
+		
+		
+		function createItem(parentId, i, isrc){
 		
 			var holder = document.getElementById( parentId );
 			if( holder != null ){
@@ -161,49 +371,52 @@
 				try{
 					holder.appendChild( 
 						folder = 
-							createElement( "div", {id: 'folder'+i, class: 'folder'}, 
-								createElement( "a", {id: 'folderLink'+i, class: 'folderLink' , href: ihref},
-									createElement( "div", {id: 'folderLinkImg'+i, class: 'folderLinkImg'}, 
-										createElement( "div", { id: 'childrenCount'+i, class: 'childrenCount' }
+							createElement( "div", {id: 'folder-'+i, class: 'folder'}, 
+								createElement( "a", {id: 'folderLink-'+i, class: 'folderLink' },
+									createElement( "div", {id: 'folderLinkImg-'+i, class: 'folderLinkImg'}, 
+										createElement( "div", { id: 'childrenCount-'+i, class: 'childrenCount' }
 										),
 										img = 
-										createElement( "img", {src: isrc, alt: ''}
+										createElement( "img", {id: 'folderLinkImgIcon-', src: isrc, alt: ''}
 										)				
 									),
 									div = 
-									createElement( "div", {id: 'folderLinkText'+i, class: 'folderLinkText'},
-										createElement( "p", {id: 'folderLinkTextp'+i}
+									createElement( "div", {id: 'folderLinkText-'+i, class: 'folderLinkText'},
+										createElement( "p", {id: 'folderLinkTextp-'+i}
 										)
 									)
 								),		
 								input = 
-								createElement( "input", {id: 'input'+i, type: 'checkbox'}
+								createElement( "input", {id: 'input-'+i, type: 'checkbox'}
 								)			
 							)
 					);
 				}catch(e){
-					alert('Errror! I can\'t create and element');
+					alert('I can\'t create and element');
 				}
 			}else
 				return false;
 		}
 		
-		function addEventListener(i){
+		function addFolderEventListener(i){
 		
 			try{
-				document.getElementById('folder' + i).addEventListener("mouseenter", mouseenterVisible);
-				document.getElementById('folder' + i).addEventListener("mouseleave", mouseleaveVisible);
+				document.getElementById('folder-' + i).addEventListener("mouseenter", mouseenterVisible);
+				document.getElementById('folder-' + i).addEventListener("mouseleave", mouseleaveVisible);
+				document.getElementById('folderLink-' + i).addEventListener("click", mouseClickFolderLink);
+				
 				return true;
 			}catch(e){
 				return false;
 			}
 		}
 		
-		function addInnerFolderContent( i, childrenCount, folderLinkTextp){
+		function addInnerFolderContent( i, childrenCount, folderLinkTextp, ids){
 			
 			try{
-				document.getElementById('childrenCount' + i).innerHTML = childrenCount;
-				document.getElementById('folderLinkTextp' + i).innerHTML = folderLinkTextp;
+				document.getElementById('childrenCount-' + i).innerHTML = childrenCount;
+				document.getElementById('folderLinkTextp-' + i).innerHTML = folderLinkTextp;
+				document.getElementById('folder-' + i).dataset.ids = ''+ids+'';
 				return true;
 			}catch(e){
 				return false;
@@ -211,7 +424,7 @@
 		}
 		
 	</script>
-	
+
 </head>
 <body>
 
@@ -221,32 +434,35 @@
 			<p class="navbar-text pull-right" id="inbrand">
 				Logged in as <a  class="navbar-link" id="username">Username</a>
 			</p>
+
+		</div>
+	</div>	
+		<ol class="breadcrumb" id="navigation">
+
+		</ol>
+
+		<div class="header" id="header">
+
 		</div>
 
 		<div class="main" id="main">
 
-			<div class="header">
-	
+			<div class="content foldersContent" id="content">
+				
+
 			</div>
+
+			<div class="clearfix"></div>
+			<div class="content documentsContent"></div>
+			<div class="clearfix"></div>
 		</div>
-		<div class="content foldersContent" id="content">
-			
-		</div>
-
-		<div class="clearfix"></div>
-		<div class="content documentsContent"></div>
-		<div class="clearfix"></div>
-	</div>	
-
-
 	<div class="clear"></div>
 <script type="text/javascript">
-
-		
-		document.getElementById('brand').innerHTML = "Base id: "+getCookie('databaseId');
-		document.getElementById('username').innerHTML = getCookie('userName');
-		LoadRootObjects();
-		
+	
+	document.getElementById('brand').innerHTML = "Base id: "+getCookie('databaseId');
+	document.getElementById('username').innerHTML = getCookie('userName');
+	LoadRootObjects();
+	
 </script>
 
 </body>

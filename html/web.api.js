@@ -95,7 +95,7 @@ var api = {
         var data = {
             "api" : "IServerApi",
             "method" : "GetObjects",
-            "ids" : ids,
+            "ids" : ids
         };
 
         var xmlhttp = this.getXmlHttp();
@@ -109,6 +109,28 @@ var api = {
                 }
             }
         };
+    },
+	    
+    getMetadata: function (callbackFunction) {
+	
+        var data = {
+            "api" : "IServerApi",
+            "method" : "GetMetadata",
+            "localVersion" : 0
+        };
+
+		
+        var xmlhttp = this.getXmlHttp();
+        xmlhttp.open('POST', this.currentHost + '/web/call', false);
+        xmlhttp.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xmlhttp.send(JSON.stringify(data));
+//        xmlhttp.onreadystatechange = function() {
+//            if (xmlhttp.readyState == 4) {
+                if (xmlhttp.status == 200) {
+                    callbackFunction(xmlhttp.responseText);
+                }
+ //           }
+  //      };
     },
 	
     getVersion: function (callbackFunction) {
