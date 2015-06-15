@@ -124,13 +124,9 @@ var api = {
         xmlhttp.open('POST', this.currentHost + '/web/call', false);
         xmlhttp.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         xmlhttp.send(JSON.stringify(data));
-//        xmlhttp.onreadystatechange = function() {
-//            if (xmlhttp.readyState == 4) {
-                if (xmlhttp.status == 200) {
-                    callbackFunction(xmlhttp.responseText);
-                }
- //           }
-  //      };
+            if (xmlhttp.status == 200) {
+                callbackFunction(xmlhttp.responseText);
+            }
     },
 	
     getVersion: function (callbackFunction) {
@@ -140,7 +136,6 @@ var api = {
 		// запрос на другой домен 
 		xhr.open('GET', this.currentHost + '/web/version', true);
         xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');        
-		//сейчас только выводит в виде сообщения, надо доделать для отображения и обработать ошибки
 		xhr.onload = function() {
 		  if(this.status == 200){
 			callbackFunction( 'Connection to ' + this.responseText );
@@ -148,10 +143,10 @@ var api = {
 		  else
 			callbackFunction( 'I can\'t connect to Pilot-Server ' + this.responseText );
 		}
-		
 		xhr.send();
 		
     }
-
 	
+	
+
 };

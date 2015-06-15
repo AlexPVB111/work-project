@@ -177,12 +177,11 @@
 			}			
 			
 			var test = document.getElementById('childrenCount-' + id.partId).innerHTML;
+			
 			if(test != 0){
 			
 			// получение ids	
 				var ids = document.getElementById('folder-' + id.partId).dataset.ids;
-			
-
 			
 			//	получение road			
 				var div = document.getElementById('navigation');
@@ -220,7 +219,7 @@
 				
 			ids = [ ids ];
             api.getObjects(ids, function (result) {
-
+		
             if (!IsJsonString(result)) {
 				alert("Incorrect data format");
                 return;
@@ -231,6 +230,7 @@
             api.getObjects(childrenIds, function (children) {
                 OnChildrenLoaded(JSON.parse(children));
             })
+
   
             });
 		
@@ -430,9 +430,14 @@
 
 	<div class="navbar navbar-default" id="mainbrand">
 		<div class="navbar-inner">
-			<a class="brand" id="brand"></a>
-			<p class="navbar-text pull-right" id="inbrand">
-				Logged in as <a  class="navbar-link" id="username">Username</a>
+			<p class="navbar-text pull-left" id="inbrand1">
+				Base name: <a  class="navbar-link" id="basename"></a>
+			</p>
+			<p class="navbar-text pull-left" id="inbrand1">
+				Base version: <a  class="navbar-link" id="baseversion"></a>
+			</p>
+			<p class="navbar-text pull-right" id="inbrand2">
+				Logged in as <a  class="navbar-link" id="username"></a>
 			</p>
 
 		</div>
@@ -441,15 +446,10 @@
 
 		</ol>
 
-		<div class="header" id="header">
-
-		</div>
-
 		<div class="main" id="main">
 
 			<div class="content foldersContent" id="content">
 				
-
 			</div>
 
 			<div class="clearfix"></div>
@@ -459,8 +459,11 @@
 	<div class="clear"></div>
 <script type="text/javascript">
 	
-	document.getElementById('brand').innerHTML = "Base id: "+getCookie('databaseId');
+	document.getElementById('basename').innerHTML = getCookie('baseName');
+	document.getElementById('baseversion').innerHTML = getCookie('databaseVersion');
 	document.getElementById('username').innerHTML = getCookie('userName');
+	
+	
 	LoadRootObjects();
 	
 </script>

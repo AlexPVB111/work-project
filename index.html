@@ -22,6 +22,7 @@
             var login = document.getElementById("login").value;
             var password = document.getElementById("password").value;
             var useWinAuth = false;
+			document.cookie = "baseName=" + database;
 			document.getElementById('connection').innerHTML = 'Connecting...';
 			control.connectToDatabase('http://localhost:80', database, login, password, useWinAuth);
 				
@@ -39,6 +40,7 @@
 <body>
 
 	<script>
+	//	alert(document.location.port);
 		control.getVersion();
 	</script>
 

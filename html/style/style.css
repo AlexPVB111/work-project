@@ -127,6 +127,7 @@ body {
 .brand{
 	position: relative; 
 	float: left;
+	margin-left: 20px;
 }
 .breadcrumb{
 	margin: 20px;

@@ -17,10 +17,10 @@ var control = {
 
 								if(result.indexOf('I can\'t open base!') == -1){
 									var databaseInfo = JSON.parse(result);
-									var bdid = databaseInfo.DatabaseId;
+									var bdVersion = databaseInfo.DatabaseVersion;
 									var person = databaseInfo.Person.DisplayName;	
 									document.cookie = "userName=" + person;
-									document.cookie = "databaseId=" + bdid;
+									document.cookie = "databaseVersion=" + bdVersion;
 									document.location.href = "html/main.html";
 								}
 								else{
