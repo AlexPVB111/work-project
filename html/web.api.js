@@ -147,6 +147,42 @@ var api = {
 		
     }
 	
+	getFile: function (id, size, callbackFunction, errorFunction) {
+    
+        var data = {
+            "api" : "IFileArchiveApi",
+            "method" : "GetFileChunk",
+            "databaseName" : getCookie('baseName'),
+            "id" : id,
+            "pos" : 0,
+            "count" : size
+        };
+
+        
+        var xmlhttp = this.getXmlHttp();
+        xmlhttp.open('POST', this.currentHost + '/web/call', false);
+        xmlhttp.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xmlhttp.send(JSON.stringify(data));
+            if (xmlhttp.status == 200) {
+                callbackFunction(xmlhttp.responseText);
+            }
+            else {
+                errorFunction();
+            }
+    },
+
+
+    openFile: function (id, size) {
+
+        window.location = this.currentHost + '/web/file?' 
+            + "api=" + encodeURIComponent('IFileArchiveApi') + '&'
+            + "method=" + encodeURIComponent('GetFileChunk') + '&' 
+            + "databaseName=" + encodeURIComponent(getCookie('baseName')) + '&' 
+            + "id=" + encodeURIComponent(id) + '&' 
+            + "pos=" + encodeURIComponent(o) + '&' 
+            + "count=" + encodeURIComponent(size) ;
+
+    },
 	
 
 };
