@@ -7,14 +7,14 @@
 	<link rel="stylesheet" href="style/bootstrap.min1.css" />
 	<link rel="stylesheet" href="style/main-template.css" />
     <link type="text/css" href="style/style.css" rel="stylesheet" />
-
+	
 	<script src="js/jquery-1.11.2.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/bootstrap-dropdown.js"></script>	
 	<script type="text/javascript" src="web.api.js"></script>
 	<script type="text/javascript" src="web.control.js"></script>
 	
-	<title>Login</title>
+	<title>Mainframe</title>
 	<script>
 		
 		function IsJsonString(str) {
@@ -38,7 +38,7 @@
                 }
 
                 var root = JSON.parse(result)[0];
-
+				
 				// создание корневой "крошки"
 				var partOfRootBreadCrumbId = 'root';
 				var rootBreadCrumbLabel = 'Корневая папка';
@@ -48,6 +48,16 @@
 				
                 var childrenIds = root.Children.Tree;
                 api.getObjects(childrenIds, function (children) {
+			
+					api.getMetadata( function(result){
+					
+						if (!IsJsonString(result)) {
+							alert("Incorrect data format!");
+							return;
+						}
+				
+						window.meta = JSON.parse(result);
+					});
                     OnChildrenLoaded(JSON.parse(children));
                 })
                 
@@ -66,27 +76,16 @@
 				val = children[i];
 				typeId = children[i].TypeId;
 				count = (children[i].Children.Tree).length;
-				text = GetTitle(val.Attributes);
-				api.getMetadata( function(result){
-				
-					if (!IsJsonString(result)) {
-						alert("Incorrect data format!");
-						return;
+				text = GetTitle(val.Attributes);	
+				var root = window.meta;
+				for (var j in root.Types) {
+					if (root.Types[j].Id == typeId) {
+						icon = root.Types[j].Icon;
 					}
-			
-					var root = JSON.parse(result);
-					for (var j in root.Types) {
-						if (root.Types[j].Id == typeId) {
-							icon = root.Types[j].Icon;
-						}
-					}
-					createItem('content', i, 'data:image/svg+xml;base64,' + icon );
-					addFolderEventListener(i);
-					addInnerFolderContent(i, count, text, children[i].Id);
-
-				});
-
-
+				}
+				createItem('content', i, 'data:image/svg+xml;base64,' + icon );
+				addFolderEventListener(i);
+				addInnerFolderContent(i, count, text, children[i].Id);
             }
         }
 
@@ -250,7 +249,7 @@
 		}
 		
 		function mouseClickBreadCrumb(event){
-		
+			
 			var myId = {};
 			if(!tryGetId(event, myId)){
 				alert('I can\'t get element\'s id');
@@ -423,6 +422,11 @@
 			}		
 		}
 		
+		
+		
+		
+
+		
 	</script>
 
 </head>
@@ -459,6 +463,45 @@
 	<div class="clear"></div>
 <script type="text/javascript">
 	
+
+/*	
+window.onpopstate = function(event) {
+  alert("location: " + location.href + ", state: " + JSON.stringify(event.state));
+};
+*/
+/*
+window.onload=function(){
+
+	window.setTimeout(
+
+	function() 
+
+	{
+
+	window.addEventListener(
+
+	"popstate", 
+
+	function(e) {
+
+	//ajax загрузка нужной части сайта.
+
+	//e.preventDefault();
+	alert("!!!sdfsdf");
+	}, 
+
+	false
+
+	);
+
+	},
+
+	 1);
+	};
+*/
+
+
+
 	document.getElementById('basename').innerHTML = getCookie('baseName');
 	document.getElementById('baseversion').innerHTML = getCookie('databaseVersion');
 	document.getElementById('username').innerHTML = getCookie('userName');

@@ -29,18 +29,23 @@
         }
 
 	function attempt(){
-		if(document.getElementById("database").value != "" && document.getElementById("login").value != "" && document.getElementById("password").value != "")
+		if(document.getElementById("database").value != '' && document.getElementById("login").value != '' && document.getElementById("password").value != '')
 			document.getElementById('btn').disabled = false;
 		else
 			document.getElementById('btn').disabled = true;;
 	}
+	
+	function whichButton(event)
+	{
+		if(event.keyCode == 13 && document.getElementById('btn').disabled == false)
+			connect();
+	}
 
     </script>
 </head>
-<body>
+<body onkeyup="whichButton(event)">
 
 	<script>
-	//	alert(document.location.port);
 		control.getVersion();
 	</script>
 
@@ -53,10 +58,10 @@
 			<br><br/>
 			<h4 class="form-signin-wrong" id="wrong" align="left"></h4>
 			<h4 class="form-signin-heading" align="left">Base name</h4>
-			<input class="form-control" placeholder="Base name" onchange="attempt()" required="required" autofocus="" type="database" id="database">
+			<input class="form-control" placeholder="Base name" onkeyup ="attempt()" required="required" autofocus="" type="database" id="database">
 			<h4 class="form-signin-heading" align="left">Account</h4>
-			<input class="form-control" placeholder="Username" onchange="attempt()" required="required" type="login" id="login">
-			<input class="form-control" placeholder="Password" onchange="attempt()" required="required" type="password" id="password">
+			<input class="form-control" placeholder="Username" onkeyup ="attempt()" required="required" type="login" id="login">
+			<input class="form-control" placeholder="Password" onkeyup ="attempt()" required="required" type="password" id="password">
 			
 			<div class="row-fluid">
   					<h4 class="form-signin-connection" id="connection" align="left">  </h4>

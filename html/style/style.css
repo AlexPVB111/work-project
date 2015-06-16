@@ -2,8 +2,10 @@ body {
 	background: #FFF;
 	color: #666666;
 	text-align: center;
+	
 	font-family: 'Segoe UI';
-}
+
+  }
 
 .header {
 	text-align: left;
