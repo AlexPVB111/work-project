@@ -42,6 +42,10 @@
 				// создание корневой "крошки"
 				var partOfRootBreadCrumbId = 'root';
 				var rootBreadCrumbLabel = 'Корневая папка';
+							
+				// изменение url
+				history.pushState(null, null, "?id=" + root.Id);
+				
 				createBreadCrumb('navigation', partOfRootBreadCrumbId, '#');
 				addBreadCrumbContent(partOfRootBreadCrumbId, rootBreadCrumbLabel, root.Id);
 				addBreadCrumbEventListener(partOfRootBreadCrumbId);
@@ -182,6 +186,9 @@
 			// получение ids	
 				var ids = document.getElementById('folder-' + id.partId).dataset.ids;
 			
+			// изменение url
+				history.pushState(null, null, "?id=" + ids);
+			
 			//	получение road			
 				var div = document.getElementById('navigation');
 				var elems = div.getElementsByTagName('LI');
@@ -229,7 +236,6 @@
             api.getObjects(childrenIds, function (children) {
                 OnChildrenLoaded(JSON.parse(children));
             })
-
   
             });
 		
@@ -262,7 +268,7 @@
 			var length = document.getElementById('navigation').getElementsByTagName('li').length;			
 			var road = document.getElementById(myId.id).dataset.road;
 			var count = (road.split('*').length - 1);
-			
+	//		alert(road);
 			for(var i=count-1; i<length-1; i++){
 			
 				var idRemovingElement = document.getElementById('navigation').lastElementChild.id;
@@ -421,12 +427,7 @@
 				return false;
 			}		
 		}
-		
-		
-		
-		
-
-		
+				
 	</script>
 
 </head>
@@ -462,50 +463,40 @@
 		</div>
 	<div class="clear"></div>
 <script type="text/javascript">
+
+	// Устанавливаем обработчик события "popstate": 
+	window.addEventListener('popstate', function(event) { 
 	
+		//	получение размера списка			
+		var div = document.getElementById('navigation');
+		var length = document.getElementById('navigation').getElementsByTagName('li').length;
+		
+		if(length>1){
+			var idRemovingElement = document.getElementById('navigation').lastElementChild.id;
+			var removingElement = document.getElementById(idRemovingElement);
+			div.removeChild(removingElement);
+			var idNewLastElement = document.getElementById('navigation').lastElementChild.id;
+			var partOflinkIntoBreadCrumbid = {};
+			
+			if(!tryFindPartId(idNewLastElement, partOflinkIntoBreadCrumbid)){
+				alert('I can\'t find id');
+				return;
+			}				
+			// получение ids	
+			var ids = document.getElementById('link-' + partOflinkIntoBreadCrumbid.partId).dataset.ids;	
 
-/*	
-window.onpopstate = function(event) {
-  alert("location: " + location.href + ", state: " + JSON.stringify(event.state));
-};
-*/
-/*
-window.onload=function(){
-
-	window.setTimeout(
-
-	function() 
-
-	{
-
-	window.addEventListener(
-
-	"popstate", 
-
-	function(e) {
-
-	//ajax загрузка нужной части сайта.
-
-	//e.preventDefault();
-	alert("!!!sdfsdf");
-	}, 
-
-	false
-
-	);
-
-	},
-
-	 1);
-	};
-*/
-
-
+			LoadFolderContent(ids);
+		}else{
+			var ids = document.getElementById('link-root').dataset.ids;	
+			// изменение url
+			history.pushState(null, null, "?id=" + ids);
+		}
+  
+},  false); 
 
 	document.getElementById('basename').innerHTML = getCookie('baseName');
 	document.getElementById('baseversion').innerHTML = getCookie('databaseVersion');
 	document.getElementById('username').innerHTML = getCookie('userName');
-	
 	
 	LoadRootObjects();
 	
