@@ -1,10 +1,9 @@
-var api = {
+﻿var api = {
 
-    currentHost: //"http://localhost:80"
-	"http://localhost"
-	,
+    currentHost: "",
+    database: "",
 
-    /* ������� ������ ��������������� ������ XMLHTTP */
+    /* Функция создаёт кроссбраузерный объект XMLHTTP */
     getXmlHttp: function() {
         var xmlhttp;
         try {
@@ -24,14 +23,13 @@ var api = {
         return xmlhttp;
     },
     
-    //������� ����������� � �������
+    //Создает подключение к серверу
     connect : function (host, callbackFunction) {
 	
-        if (host != "")
- 			this.currentHost = host;
+	   this.currentHost = host;
 			
         var xmlhttp = this.getXmlHttp();
-        xmlhttp.open('POST', this.currentHost + '/web/connect', true); // ��������� ����������� ����������
+        xmlhttp.open('POST', this.currentHost + '/web/connect', true); // Открываем асинхронное соединение
         xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xmlhttp.send(null);
         xmlhttp.onreadystatechange = function() {
@@ -49,14 +47,16 @@ var api = {
 
     openDatabase : function (database, login, password, useWinAuth, callbackFunction){
 		
-        // construct an HTTP request
+        this.database = database;
+
         var data = {
             "api" : "IServerApi",
             "method" : "OpenDatabase",
             "database" : database,
             "login" : login,
             "protectedPassword" : password,
-            "useWindowsAuth" : useWinAuth
+            "useWindowsAuth" : useWinAuth,
+            "licenseType" : 100 
         };
 
         var xmlhttp = this.getXmlHttp();
@@ -90,7 +90,7 @@ var api = {
         });
     },
     
-    getObjects: function (ids, callbackFunction) {
+    getObjects: function (ids, callbackFunction, errorFunction) {
 	
         var data = {
             "api" : "IServerApi",
@@ -107,11 +107,14 @@ var api = {
                 if (xmlhttp.status == 200) {
                     callbackFunction(xmlhttp.responseText);
                 }
+                else {
+                    errorFunction();
+                }
             }
         };
     },
 	    
-    getMetadata: function (callbackFunction) {
+    getMetadata: function (callbackFunction, errorFunction) {
 	
         var data = {
             "api" : "IServerApi",
@@ -127,27 +130,12 @@ var api = {
             if (xmlhttp.status == 200) {
                 callbackFunction(xmlhttp.responseText);
             }
+            else {
+                errorFunction();
+            }
     },
-	
-    getVersion: function (callbackFunction) {
-	
-		var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
-		var xhr = new XHR();
-		// ������ �� ������ ����� 
-		xhr.open('GET', this.currentHost + '/web/version', true);
-        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');        
-		xhr.onload = function() {
-		  if(this.status == 200){
-			callbackFunction( 'Connection to ' + this.responseText );
-		  }
-		  else
-			callbackFunction( 'I can\'t connect to Pilot-Server ' + this.responseText );
-		}
-		xhr.send();
-		
-    }
-	
-	getFile: function (id, size, callbackFunction, errorFunction) {
+
+    getFile: function (id, size, callbackFunction, errorFunction) {
     
         var data = {
             "api" : "IFileArchiveApi",
@@ -179,10 +167,27 @@ var api = {
             + "method=" + encodeURIComponent('GetFileChunk') + '&' 
             + "databaseName=" + encodeURIComponent(getCookie('baseName')) + '&' 
             + "id=" + encodeURIComponent(id) + '&' 
-            + "pos=" + encodeURIComponent(o) + '&' 
+            + "pos=" + encodeURIComponent(0) + '&' 
             + "count=" + encodeURIComponent(size) ;
 
     },
 	
-
+    getVersion: function (callbackFunction) {
+	
+		var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
+		var xhr = new XHR();
+		// запрос на другой домен 
+		xhr.open('GET', this.currentHost + '/web/version', true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');        
+		xhr.onload = function() {
+		  if(this.status == 200){
+			callbackFunction( 'Connection to ' + this.responseText );
+		  }
+		  else
+			callbackFunction( 'I can\'t connect to Pilot-Server ' + this.responseText );
+		}
+		xhr.send();
+		
+    }
+	
 };
