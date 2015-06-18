@@ -21,6 +21,7 @@ var control = {
 									var person = databaseInfo.Person.DisplayName;	
 									document.cookie = "userName=" + person;
 									document.cookie = "databaseVersion=" + bdVersion;
+									document.cookie = "nginxHost=" + host;
 									document.location.href = "html/main.html";
 								}
 								else{

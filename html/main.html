@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="style/bootstrap.min1.css" />
 	<link rel="stylesheet" href="style/main-template.css" />
     <link type="text/css" href="style/style.css" rel="stylesheet" />
+    <link type="text/css" href="style/checkboxstyle.css" rel="stylesheet" />
 	
 	<script src="js/jquery-1.11.2.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
@@ -52,30 +53,34 @@
 				
                 var childrenIds = root.Children.Tree;
                 api.getObjects(childrenIds, function (children) {
-			
-					api.getMetadata( function(result){
-					
+
+					api.getMetadata(function(result){
+						
 						if (!IsJsonString(result)) {
 							alert("Incorrect data format!");
 							return;
 						}
 				
 						window.meta = JSON.parse(result);
-					});
+					}, errorGetMetaData);
                     OnChildrenLoaded(JSON.parse(children));
-                })
+                }, errorGetObjects)
                 
-            })
+            }, errorGetObjects
+			)
         }
 
+		
         function OnChildrenLoaded(children)
         {
 			var count = 100500;
 			var text;
-			var childrenIds;
+			var chil;
 			var typeId;
             var val;
-			
+			var size;
+			var hasFiles;
+			var idFiles;
             for (var i in children) {
 				val = children[i];
 				typeId = children[i].TypeId;
@@ -85,11 +90,18 @@
 				for (var j in root.Types) {
 					if (root.Types[j].Id == typeId) {
 						icon = root.Types[j].Icon;
+						hasFiles = root.Types[j].HasFiles;
+						if(hasFiles){
+							idFiles = children[i].Files[0].Body.Id;
+							size = children[i].Files[0].Body.Size;
+						//	alert(children[i].Files[0].Name);
+						}
 					}
+					
 				}
 				createItem('content', i, 'data:image/svg+xml;base64,' + icon );
 				addFolderEventListener(i);
-				addInnerFolderContent(i, count, text, children[i].Id);
+				addInnerFolderContent(i, count, text, children[i].Id , hasFiles, idFiles, size);
             }
         }
 
@@ -160,9 +172,7 @@
 					document.getElementById(elems[i].id).style.visibility = "hidden";			
 			}
 		}
-		
-		
-		
+
 		function mouseClickFolderLink(){
 		
 			// получение id элемента, сгенерировавшего событие
@@ -179,13 +189,14 @@
 				return;
 			}			
 			
-			var test = document.getElementById('childrenCount-' + id.partId).innerHTML;
-			
-			if(test != 0){
-			
+			var testChildren = document.getElementById('childrenCount-' + id.partId).innerHTML;
+			var testHasFiles = document.getElementById('folder-' + id.partId).dataset.hasFiles;
+
+			if(testChildren != 0 & !testHasFiles){
+
 			// получение ids	
 				var ids = document.getElementById('folder-' + id.partId).dataset.ids;
-			
+				
 			// изменение url
 				history.pushState(null, null, "?id=" + ids);
 			
@@ -199,6 +210,8 @@
 
 			// создание и инициализация "крошки"
 				var breadCrumbLabel = document.getElementById('folderLinkTextp-' + id.partId).innerHTML;
+			// смена заголовка	
+				document.title = breadCrumbLabel;
 				
 				if(!createBreadCrumb('navigation', road + '' + id.partId, '#')){
 					alert('I can\'t create breadcrumb ');
@@ -213,9 +226,31 @@
 					}
 				}
 			} else{
-				alert("It\'s file!");
+				// получение idFiles	
+				var idFiles = document.getElementById('folder-' + id.partId).dataset.idFiles;
+				
+				// получение sizeFiles	
+				var sizeFiles = document.getElementById('folder-' + id.partId).dataset.sizeFiles;
+				
+				api.openFile(idFiles, sizeFiles, function(result){
+				alert(result);
+				
+				}, errorGetFile);
+			
 			}
 		
+		}
+		
+		function errorGetObjects() {
+			alert("Can\'t get objects");
+		}
+		
+		function errorGetMetaData() {
+			alert("Cant\'t get metadata");
+		}
+		
+		function errorGetFile() {
+			alert("Cant\'t get file");
 		}
 		
 		function LoadFolderContent(ids){
@@ -225,19 +260,20 @@
 				
 			ids = [ ids ];
             api.getObjects(ids, function (result) {
-		
-            if (!IsJsonString(result)) {
-				alert("Incorrect data format");
-                return;
-            }
-			
-			var newFolder = JSON.parse(result)[0];
-            var childrenIds = newFolder.Children.Tree;
-            api.getObjects(childrenIds, function (children) {
-                OnChildrenLoaded(JSON.parse(children));
-            })
+
+			alert(result);
+				if (!IsJsonString(result)) {
+					alert("Incorrect data format");
+					return;
+				}
+
+				var newFolder = JSON.parse(result)[0];
+				var childrenIds = newFolder.Children.Tree;
+				api.getObjects(childrenIds, function (children) {
+					OnChildrenLoaded(JSON.parse(children));
+				},errorGetObjects)
   
-            });
+            }, errorGetObjects);
 		
 		}
 		
@@ -261,6 +297,9 @@
 				alert('I can\'t get element\'s id');
 				return;
 			}
+
+			// смена заголовка	
+				document.title = document.getElementById(myId.id).innerText;
 			
 			//	получение размера списка			
 			var div = document.getElementById('navigation');
@@ -268,7 +307,7 @@
 			var length = document.getElementById('navigation').getElementsByTagName('li').length;			
 			var road = document.getElementById(myId.id).dataset.road;
 			var count = (road.split('*').length - 1);
-	//		alert(road);
+
 			for(var i=count-1; i<length-1; i++){
 			
 				var idRemovingElement = document.getElementById('navigation').lastElementChild.id;
@@ -372,7 +411,7 @@
 			var holder = document.getElementById( parentId );
 			if( holder != null ){
 				var folder;
-				var img, div, input;
+				var img, div, input, label;
 				try{
 					holder.appendChild( 
 						folder = 
@@ -392,12 +431,16 @@
 									)
 								),		
 								input = 
-								createElement( "input", {id: 'input-'+i, type: 'checkbox'}
+								createElement( "input", {id: 'input-'+i, type: 'checkbox' } //, class: 'css-checkbox lrg'} 
+//								),
+//								label = 
+//								createElement( "label", {id: 'label-'+i, for: 'input-'+i, class: 'css-label lrg web-two-style'} 
+															
 								)			
 							)
 					);
 				}catch(e){
-					alert('I can\'t create and element');
+					alert('Can\'t create and element');
 				}
 			}else
 				return false;
@@ -416,12 +459,17 @@
 			}
 		}
 		
-		function addInnerFolderContent( i, childrenCount, folderLinkTextp, ids){
+		function addInnerFolderContent( i, childrenCount, folderLinkTextp, ids, hasFiles, idFiles, sizeFiles){
 			
 			try{
 				document.getElementById('childrenCount-' + i).innerHTML = childrenCount;
 				document.getElementById('folderLinkTextp-' + i).innerHTML = folderLinkTextp;
 				document.getElementById('folder-' + i).dataset.ids = ''+ids+'';
+				document.getElementById('folder-' + i).dataset.hasFiles = hasFiles;
+				if(hasFiles){				
+					document.getElementById('folder-' + i).dataset.idFiles = idFiles;
+					document.getElementById('folder-' + i).dataset.sizeFiles = sizeFiles;
+				}
 				return true;
 			}catch(e){
 				return false;
@@ -463,7 +511,12 @@
 		</div>
 	<div class="clear"></div>
 <script type="text/javascript">
-
+	
+	document.getElementById('basename').innerHTML = getCookie('baseName');
+	document.getElementById('baseversion').innerHTML = getCookie('databaseVersion');
+	document.getElementById('username').innerHTML = getCookie('userName');
+	api.currentHost = getCookie('nginxHost');
+	
 	// Устанавливаем обработчик события "popstate": 
 	window.addEventListener('popstate', function(event) { 
 	
@@ -479,12 +532,14 @@
 			var partOflinkIntoBreadCrumbid = {};
 			
 			if(!tryFindPartId(idNewLastElement, partOflinkIntoBreadCrumbid)){
-				alert('I can\'t find id');
+				alert('Can\'t find id');
 				return;
 			}				
 			// получение ids	
 			var ids = document.getElementById('link-' + partOflinkIntoBreadCrumbid.partId).dataset.ids;	
-
+			// смена заголовка	
+			document.title = document.getElementById('link-' + partOflinkIntoBreadCrumbid.partId).innerText;
+			
 			LoadFolderContent(ids);
 		}else{
 			var ids = document.getElementById('link-root').dataset.ids;	
@@ -492,13 +547,11 @@
 			history.pushState(null, null, "?id=" + ids);
 		}
   
-},  false); 
-
-	document.getElementById('basename').innerHTML = getCookie('baseName');
-	document.getElementById('baseversion').innerHTML = getCookie('databaseVersion');
-	document.getElementById('username').innerHTML = getCookie('userName');
+	},  false); 
 	
 	LoadRootObjects();
+	
+
 	
 </script>
 

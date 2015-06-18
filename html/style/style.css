@@ -101,7 +101,9 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
+.folderLinkText p:hover {
+cursor: pointer;
+}
 
 .clear { 
 	clear: both; 
@@ -118,10 +120,16 @@ body {
 	top: -59px;
 	right: 5px;
 	visibility: hidden;
+    width: 14px;
+    height: 14px;
 
 }
 .folder input  :hover +.folderLink {
 }
+.folder:hover {
+cursor: pointer;
+}
+
 .folder:hover  .folderLink { 
 	border: 1px solid #000;	
 	color: #345765;

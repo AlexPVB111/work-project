@@ -1,10 +1,9 @@
 var api = {
 
-    currentHost: //"http://localhost:80"
-	"http://localhost"
-	,
+    currentHost: "",
+    database: "",
 
-    /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ XMLHTTP */
+    /* Функция создаёт кроссбраузерный объект XMLHTTP */
     getXmlHttp: function() {
         var xmlhttp;
         try {
@@ -24,14 +23,13 @@ var api = {
         return xmlhttp;
     },
     
-    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    //Создает подключение к серверу
     connect : function (host, callbackFunction) {
 	
-        if (host != "")
- 			this.currentHost = host;
+	   this.currentHost = host;
 			
         var xmlhttp = this.getXmlHttp();
-        xmlhttp.open('POST', this.currentHost + '/web/connect', true); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        xmlhttp.open('POST', this.currentHost + '/web/connect', true); // Открываем асинхронное соединение
         xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xmlhttp.send(null);
         xmlhttp.onreadystatechange = function() {
@@ -41,7 +39,7 @@ var api = {
                     callbackFunction('ok');
                 }
 				else{
-                    callbackFunction('I can\'t connect to Pilot-Server! Xmlhttp.status == ' + xmlhttp.status);
+                    callbackFunction('Can\'t connect to Pilot-Server Xmlhttp.status == ' + xmlhttp.status);
 				}
             }
 		};
@@ -49,14 +47,16 @@ var api = {
 
     openDatabase : function (database, login, password, useWinAuth, callbackFunction){
 		
-        // construct an HTTP request
+        this.database = database;
+
         var data = {
             "api" : "IServerApi",
             "method" : "OpenDatabase",
             "database" : database,
             "login" : login,
             "protectedPassword" : password,
-            "useWindowsAuth" : useWinAuth
+            "useWindowsAuth" : useWinAuth,
+            "licenseType" : 100 
         };
 
         var xmlhttp = this.getXmlHttp();
@@ -70,7 +70,7 @@ var api = {
                     callbackFunction(xmlhttp.responseText);
                 }
 				else{
-					callbackFunction('Error! I can\'t open base! Xmlhttp.status == ' + xmlhttp.status);
+					callbackFunction('Can\'t open base Xmlhttp.status == ' + xmlhttp.status);
 				}
 			}
         };
@@ -85,12 +85,12 @@ var api = {
 				self.openDatabase(database, login, password, useWinAuth, callbackFunction);
 				}
 			else{	
-				callbackFunction('I can\'t connect to Pilot-Server!');
+				callbackFunction('Can\'t connect to Pilot-Server');
 				}
         });
     },
     
-    getObjects: function (ids, callbackFunction) {
+    getObjects: function (ids, callbackFunction, errorFunction) {
 	
         var data = {
             "api" : "IServerApi",
@@ -104,14 +104,18 @@ var api = {
         xmlhttp.send(JSON.stringify(data));
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4) {
+			alert(xmlhttp.status);
                 if (xmlhttp.status == 200) {
                     callbackFunction(xmlhttp.responseText);
+                }
+                else {
+                    errorFunction();
                 }
             }
         };
     },
 	    
-    getMetadata: function (callbackFunction) {
+    getMetadata: function (callbackFunction, errorFunction) {
 	
         var data = {
             "api" : "IServerApi",
@@ -127,6 +131,45 @@ var api = {
             if (xmlhttp.status == 200) {
                 callbackFunction(xmlhttp.responseText);
             }
+            else {
+                errorFunction();
+            }
+    },
+
+    getFile: function (id, size, callbackFunction, errorFunction) {
+    
+        var data = {
+            "api" : "IFileArchiveApi",
+            "method" : "GetFileChunk",
+            "databaseName" : getCookie('baseName'),
+            "id" : id,
+            "pos" : 0,
+            "count" : size
+        };
+
+        var xmlhttp = this.getXmlHttp();
+        xmlhttp.open('POST', this.currentHost + '/web/call', false);
+        xmlhttp.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xmlhttp.send(JSON.stringify(data));
+            if (xmlhttp.status == 200) {
+                callbackFunction(xmlhttp.responseText);
+            }
+            else {
+                errorFunction();
+            }
+    },
+
+
+    openFile: function (id, size) {
+
+        window.location = this.currentHost + '/web/file?' 
+            + "api=" + encodeURIComponent('IFileArchiveApi') + '&'
+            + "method=" + encodeURIComponent('GetFileChunk') + '&' 
+            + "databaseName=" + encodeURIComponent(getCookie('baseName')) + '&' 
+            + "id=" + encodeURIComponent(id) + '&' 
+            + "pos=" + encodeURIComponent(0) + '&' 
+            + "count=" + encodeURIComponent(size) ;
+
     },
 	
     getVersion: function (callbackFunction) {
@@ -147,6 +190,4 @@ var api = {
 		
     }
 	
-	
-
 };

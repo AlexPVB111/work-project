@@ -24,28 +24,29 @@
             var useWinAuth = false;
 			document.cookie = "baseName=" + database;
 			document.getElementById('connection').innerHTML = 'Connecting...';
-			control.connectToDatabase('http://localhost:80', database, login, password, useWinAuth);
+			control.connectToDatabase(api.currentHost, database, login, password, useWinAuth);
 				
         }
 
-	function attempt(){
-		if(document.getElementById("database").value != '' && document.getElementById("login").value != '' && document.getElementById("password").value != '')
-			document.getElementById('btn').disabled = false;
-		else
-			document.getElementById('btn').disabled = true;;
-	}
-	
-	function whichButton(event)
-	{
-		if(event.keyCode == 13 && document.getElementById('btn').disabled == false)
-			connect();
-	}
+		function attempt(){
+			if(document.getElementById("database").value != '' && document.getElementById("login").value != '' && document.getElementById("password").value != '')
+				document.getElementById('btn').disabled = false;
+			else
+				document.getElementById('btn').disabled = true;;
+		}
+		
+		function whichButton(event)
+		{
+			if(event.keyCode == 13 && document.getElementById('btn').disabled == false)
+				connect();
+		}
 
     </script>
 </head>
 <body onkeyup="whichButton(event)">
 
 	<script>
+		api.currentHost = window.location.href;
 		control.getVersion();
 	</script>
 
