@@ -180,7 +180,7 @@
         xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');        
 		xhr.onload = function() {
 		  if(this.status == 200){
-			callbackFunction( 'Подключение ' + this.responseText );
+			callbackFunction( 'Подключение к ' + this.responseText );
 		  }
 		  else
 			callbackFunction( 'Неудаётся подключиться к Pilot-Server ' + this.responseText );

@@ -621,6 +621,11 @@
 			document.getElementById('download').disabled = true;
 	}
 	
+	function whichButton(event)
+	{
+		if(event.keyCode == 13 && document.getElementById('download').disabled == false)
+			download();
+	}
 	</script>
 
 </head>
@@ -646,7 +651,7 @@
 	<div id="header">
 
 		<!-- Modal -->
-		<div class="modal fade" align="center" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal fade" align="center" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" onkeyup="whichButton(event)">
 		  <div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">

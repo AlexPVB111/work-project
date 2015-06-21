@@ -13,7 +13,7 @@ var control = {
 							
 							if(result.indexOf('incorrect') == -1){
 								
-								document.getElementById('connection').innerHTML = 'Подключено';	
+								document.getElementById('connection').innerHTML = 'Connected';	
 
 								if(result.indexOf('I can\'t open base!') == -1){
 									var databaseInfo = JSON.parse(result);
