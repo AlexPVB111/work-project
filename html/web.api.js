@@ -1,9 +1,9 @@
-var api = {
+п»їvar api = {
 
     currentHost: "",
     database: "",
 
-    /* Функция создаёт кроссбраузерный объект XMLHTTP */
+    /* Р¤СѓРЅРєС†РёСЏ СЃРѕР·РґР°С‘С‚ РєСЂРѕСЃСЃР±СЂР°СѓР·РµСЂРЅС‹Р№ РѕР±СЉРµРєС‚ XMLHTTP */
     getXmlHttp: function() {
         var xmlhttp;
         try {
@@ -23,13 +23,13 @@ var api = {
         return xmlhttp;
     },
     
-    //Создает подключение к серверу
+    //РЎРѕР·РґР°РµС‚ РїРѕРґРєР»СЋС‡РµРЅРёРµ Рє СЃРµСЂРІРµСЂСѓ
     connect : function (host, callbackFunction) {
 	
 	   this.currentHost = host;
 			
         var xmlhttp = this.getXmlHttp();
-        xmlhttp.open('POST', this.currentHost + '/web/connect', true); // Открываем асинхронное соединение
+        xmlhttp.open('POST', this.currentHost + '/web/connect', true); // РћС‚РєСЂС‹РІР°РµРј Р°СЃРёРЅС…СЂРѕРЅРЅРѕРµ СЃРѕРµРґРёРЅРµРЅРёРµ
         xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xmlhttp.send(null);
         xmlhttp.onreadystatechange = function() {
@@ -104,7 +104,6 @@ var api = {
         xmlhttp.send(JSON.stringify(data));
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4) {
-			alert(xmlhttp.status);
                 if (xmlhttp.status == 200) {
                     callbackFunction(xmlhttp.responseText);
                 }
@@ -160,15 +159,15 @@ var api = {
     },
 
 
-    openFile: function (id, size) {
+    openFile: function (id, size, name) {
 
-        window.location = this.currentHost + '/web/file?' 
+			return this.currentHost + '/web/file?' 
             + "api=" + encodeURIComponent('IFileArchiveApi') + '&'
             + "method=" + encodeURIComponent('GetFileChunk') + '&' 
             + "databaseName=" + encodeURIComponent(getCookie('baseName')) + '&' 
             + "id=" + encodeURIComponent(id) + '&' 
             + "pos=" + encodeURIComponent(0) + '&' 
-            + "count=" + encodeURIComponent(size) ;
+            + "count=" + encodeURIComponent(size) ; 
 
     },
 	
@@ -176,15 +175,15 @@ var api = {
 	
 		var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
 		var xhr = new XHR();
-		// запрос на другой домен 
+		// Р·Р°РїСЂРѕСЃ РЅР° РґСЂСѓРіРѕР№ РґРѕРјРµРЅ 
 		xhr.open('GET', this.currentHost + '/web/version', true);
         xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');        
 		xhr.onload = function() {
 		  if(this.status == 200){
-			callbackFunction( 'Connection to ' + this.responseText );
+			callbackFunction( 'РџРѕРґРєР»СЋС‡РµРЅРёРµ ' + this.responseText );
 		  }
 		  else
-			callbackFunction( 'I can\'t connect to Pilot-Server ' + this.responseText );
+			callbackFunction( 'РќРµСѓРґР°С‘С‚СЃСЏ РїРѕРґРєР»СЋС‡РёС‚СЊСЃСЏ Рє Pilot-Server ' + this.responseText );
 		}
 		xhr.send();
 		

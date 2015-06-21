@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +6,6 @@
 	<link rel="stylesheet" href="style/bootstrap.min1.css" />
 	<link rel="stylesheet" href="style/main-template.css" />
     <link type="text/css" href="style/style.css" rel="stylesheet" />
-    <link type="text/css" href="style/checkboxstyle.css" rel="stylesheet" />
 	
 	<script src="js/jquery-1.11.2.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
@@ -34,7 +32,7 @@
             api.getObjects(guids, function (result) {
 
                 if (!IsJsonString(result)) {
-					alert("Incorrect data format");
+					alert("Некорректный формат данных");
                     return;
                 }
 
@@ -63,6 +61,7 @@
 				
 						window.meta = JSON.parse(result);
 					}, errorGetMetaData);
+				
                     OnChildrenLoaded(JSON.parse(children));
                 }, errorGetObjects)
                 
@@ -81,6 +80,9 @@
 			var size;
 			var hasFiles;
 			var idFiles;
+			var modified;
+			var nameFiles;
+			
             for (var i in children) {
 				val = children[i];
 				typeId = children[i].TypeId;
@@ -94,14 +96,15 @@
 						if(hasFiles){
 							idFiles = children[i].Files[0].Body.Id;
 							size = children[i].Files[0].Body.Size;
-						//	alert(children[i].Files[0].Name);
+							nameFiles = children[i].Files[0].Name;
+							modified = children[i].Files[0].Body.Modified;
 						}
 					}
 					
 				}
 				createItem('content', i, 'data:image/svg+xml;base64,' + icon );
 				addFolderEventListener(i);
-				addInnerFolderContent(i, count, text, children[i].Id , hasFiles, idFiles, size);
+				addInnerFolderContent(i, count, text, children[i].Id , hasFiles, idFiles, size, nameFiles, modified);
             }
         }
 
@@ -141,11 +144,12 @@
 		    return null;
 		}
 		
+		
 		function mouseenterVisible(event){
 		
 			var myId = {};
 			if(!tryGetId(event, myId)){
-				alert('I can\'t get element\'s id');
+				alert('Не удалось получить идентификатор элемента');
 				return;
 			}
 			var div = document.getElementById(myId.id);
@@ -159,7 +163,7 @@
 		
 			var myId ={};
 			if(!tryGetId(event, myId)){
-				alert('I can\'t get element\'s id');
+				alert('Не удалось получить идентификатор элемента');
 				return;
 			}
 			var div = document.getElementById(myId.id);
@@ -178,22 +182,21 @@
 			// получение id элемента, сгенерировавшего событие
 			var myId ={};
 			if(!tryGetId(event, myId)){
-				alert('I can\'t get element\'s id');
+				alert('Не удалось получить идентификатор элемента');
 				return;
 			}
 			
 			// получение части id, необходимой для определения id folder, содержащей ids
 			var id = {};
 			if(!tryFindPartId(myId.id, id)){
-				alert('I can\'t find id');
+				alert('Не удалось найти идентификатор элемента');
 				return;
 			}			
-			
+
 			var testChildren = document.getElementById('childrenCount-' + id.partId).innerHTML;
-			var testHasFiles = document.getElementById('folder-' + id.partId).dataset.hasFiles;
+			var testHasFiles = document.getElementById('folder-' + id.partId).dataset.hasfiles;
 
-			if(testChildren != 0 & !testHasFiles){
-
+			if(testChildren != 0 && testHasFiles != true){
 			// получение ids	
 				var ids = document.getElementById('folder-' + id.partId).dataset.ids;
 				
@@ -214,11 +217,11 @@
 				document.title = breadCrumbLabel;
 				
 				if(!createBreadCrumb('navigation', road + '' + id.partId, '#')){
-					alert('I can\'t create breadcrumb ');
+					alert('Не удалось создать элемент навигации ');
 					return;
 				}else{
 					if(!addBreadCrumbContent(road + '' + id.partId, breadCrumbLabel, ids)){
-						alert('I can\'t add breadcrumb ');
+						alert('Неудалось добавить элемент навигации ');
 						return;
 					}else{
 						addBreadCrumbEventListener(road + '' + id.partId);
@@ -226,44 +229,50 @@
 					}
 				}
 			} else{
+			/*
 				// получение idFiles	
-				var idFiles = document.getElementById('folder-' + id.partId).dataset.idFiles;
-				
+				var idFiles = document.getElementById('folder-' + id.partId).dataset.idfiles;
+							
 				// получение sizeFiles	
-				var sizeFiles = document.getElementById('folder-' + id.partId).dataset.sizeFiles;
+				var sizeFiles = document.getElementById('folder-' + id.partId).dataset.sizefiles;
+
+				// получение nameFiles	
+				var namefiles = document.getElementById('folder-' + id.partId).dataset.namefiles;
 				
-				api.openFile(idFiles, sizeFiles, function(result){
-				alert(result);
-				
-				}, errorGetFile);
-			
+				//alert(api.openFile(idFiles, sizeFiles, namefiles));
+				SaveToDisk2(api.openFile(idFiles, sizeFiles, namefiles, function(result){	
+						alert('here!');
+				}, errorGetFile), namefiles);
+			*/
+			//alert('Это файл');
 			}
 		
 		}
 		
 		function errorGetObjects() {
-			alert("Can\'t get objects");
+			alert("Не удалось получить объект");
 		}
 		
 		function errorGetMetaData() {
-			alert("Cant\'t get metadata");
+			alert("Не удалось получить метаданные");
 		}
 		
 		function errorGetFile() {
-			alert("Cant\'t get file");
+			alert("Не удалось получить файл");
 		}
 		
 		function LoadFolderContent(ids){
 					
 		// очистка содержимого элемента content
 			document.getElementById("content").innerText = '';
-				
+
+			document.getElementById('downloadButton').style.visibility = "hidden";
+		
 			ids = [ ids ];
             api.getObjects(ids, function (result) {
 
-			alert(result);
 				if (!IsJsonString(result)) {
-					alert("Incorrect data format");
+					alert("Некорректный формат данных");
 					return;
 				}
 
@@ -292,14 +301,21 @@
 		
 		function mouseClickBreadCrumb(event){
 			
+			window.flag = false;
+			
 			var myId = {};
 			if(!tryGetId(event, myId)){
-				alert('I can\'t get element\'s id');
+				alert('Не удалось получить id элемента');
 				return;
 			}
-
 			// смена заголовка	
-				document.title = document.getElementById(myId.id).innerText;
+			document.title = document.getElementById(myId.id).innerText;
+			
+			// получение ids	
+			var ids = document.getElementById(myId.id).dataset.ids;			
+			
+			// изменение url
+			history.pushState(null, null, "?id=" + ids);
 			
 			//	получение размера списка			
 			var div = document.getElementById('navigation');
@@ -307,19 +323,14 @@
 			var length = document.getElementById('navigation').getElementsByTagName('li').length;			
 			var road = document.getElementById(myId.id).dataset.road;
 			var count = (road.split('*').length - 1);
-
-			for(var i=count-1; i<length-1; i++){
 			
+			for(var i=count-1; i<length-1; i++){
 				var idRemovingElement = document.getElementById('navigation').lastElementChild.id;
 				var removingElement = document.getElementById(idRemovingElement);
 				div.removeChild(removingElement);
 			}
-			
-			// получение ids	
-			var ids = document.getElementById(myId.id).dataset.ids;			
-			
-			LoadFolderContent(ids);	
 
+			LoadFolderContent(ids);	
 		}
 		
 		function tryGetId(event, myId){
@@ -374,7 +385,7 @@
 							)
 					);
 				}catch(e){
-					alert('I can\'t create and add element');
+					alert('Не удалось создать и добавить элемент навигации');
 				}
 				return true;
 			}else
@@ -421,7 +432,7 @@
 										createElement( "div", { id: 'childrenCount-'+i, class: 'childrenCount' }
 										),
 										img = 
-										createElement( "img", {id: 'folderLinkImgIcon-', src: isrc, alt: ''}
+										createElement( "img", {id: 'folderLinkImgIcon-'+i, src: isrc, alt: ''}
 										)				
 									),
 									div = 
@@ -431,16 +442,12 @@
 									)
 								),		
 								input = 
-								createElement( "input", {id: 'input-'+i, type: 'checkbox' } //, class: 'css-checkbox lrg'} 
-//								),
-//								label = 
-//								createElement( "label", {id: 'label-'+i, for: 'input-'+i, class: 'css-label lrg web-two-style'} 
-															
+								createElement( "input", {id: 'input-'+i, type: 'checkbox' }														
 								)			
 							)
 					);
 				}catch(e){
-					alert('Can\'t create and element');
+					alert('Не удалось создать элемент');
 				}
 			}else
 				return false;
@@ -452,6 +459,8 @@
 				document.getElementById('folder-' + i).addEventListener("mouseenter", mouseenterVisible);
 				document.getElementById('folder-' + i).addEventListener("mouseleave", mouseleaveVisible);
 				document.getElementById('folderLink-' + i).addEventListener("click", mouseClickFolderLink);
+				document.getElementById('input-' + i).addEventListener("change", checkboxChange);
+				
 				
 				return true;
 			}catch(e){
@@ -459,23 +468,159 @@
 			}
 		}
 		
-		function addInnerFolderContent( i, childrenCount, folderLinkTextp, ids, hasFiles, idFiles, sizeFiles){
-			
+		function addInnerFolderContent( i, childrenCount, folderLinkTextp, ids, hasFiles, idFiles, sizeFiles, nameFiles, modified){
+
 			try{
 				document.getElementById('childrenCount-' + i).innerHTML = childrenCount;
 				document.getElementById('folderLinkTextp-' + i).innerHTML = folderLinkTextp;
 				document.getElementById('folder-' + i).dataset.ids = ''+ids+'';
-				document.getElementById('folder-' + i).dataset.hasFiles = hasFiles;
-				if(hasFiles){				
-					document.getElementById('folder-' + i).dataset.idFiles = idFiles;
-					document.getElementById('folder-' + i).dataset.sizeFiles = sizeFiles;
+				document.getElementById('folder-' + i).dataset.hasfiles = hasFiles;
+
+				if(hasFiles){	
+					document.getElementById('folder-' + i).dataset.idfiles = idFiles;
+					document.getElementById('folder-' + i).dataset.sizefiles = sizeFiles;
+					document.getElementById('folder-' + i).dataset.namefiles = nameFiles;
+					document.getElementById('folder-' + i).dataset.modified = modified;
+					
 				}
 				return true;
 			}catch(e){
 				return false;
 			}		
 		}
+	
+		function checkboxChange(event){
+			
+			// получение id элемента, сгенерировавшего событие
+			var myId ={};
+			if(!tryGetId(event, myId)){
+				alert('Не удалось получить id элемента');
+				return;
+			}
+
+			// получение части id, необходимой для определения id folder, содержащей ids
+			var id = {};
+			if(!tryFindPartId(myId.id, id)){
+				alert('Не удалось найти id элемента');
+				return;
+			}			
+			
+			if(document.getElementById(myId.id).checked){
+			
 				
+				window.downloadfile = {};
+				window.downloadfile.objectId = 'folder-' + id.partId;
+
+				window.downloadfile.objectHasFiles = document.getElementById(window.downloadfile.objectId).dataset.hasfiles;
+				var testChildren = document.getElementById('childrenCount-' + id.partId).innerHTML;
+				
+				if(window.downloadfile.objectHasFiles){
+					if(testChildren == 0){
+						window.downloadfile.fileId = document.getElementById(window.downloadfile.objectId).dataset.idfiles;
+						window.downloadfile.fileSize = document.getElementById(window.downloadfile.objectId).dataset.sizefiles;
+						window.downloadfile.fileName = document.getElementById(window.downloadfile.objectId).dataset.namefiles;
+						window.downloadfile.modified = document.getElementById(window.downloadfile.objectId).dataset.modified;
+						
+						document.getElementById('downloadButton').style.visibility = "visible";
+						
+						document.getElementById('modal-body-name').innerHTML = 'Имя файла, полученное из базы: "' + window.downloadfile.fileName + '"';
+						document.getElementById('modal-body-size').innerHTML = 'Размер файла: ' + window.downloadfile.fileSize;
+						document.getElementById('modal-body-modified').innerHTML = 'Изменён: ' + window.downloadfile.modified;
+						var elem = document.getElementById('downloadname');
+						elem.placeholder = window.downloadfile.fileName;
+					
+				}else
+					alert("Выбранный объект не содержит файлов");
+				
+				}else
+					alert("Выбранный объект не содержит файлов");
+				
+			}
+			else
+				document.getElementById('downloadButton').style.visibility = "hidden";			
+		}
+		
+	function download(){
+	
+		if(downloadFile()){
+		// закрыть модальное окно
+			$('#myModal').modal('hide');
+			document.getElementById('modal-name').innerHTML = '';
+			
+		}else{
+			alert('Не могу загрузить файл. Попробуйте ещё раз.');
+		}
+	}		
+	
+	function downloadFile(){
+	
+		try{
+			var fileURL = api.openFile(window.downloadfile.fileId, window.downloadfile.fileSize, window.downloadfile.fileName, function(result){
+				}, errorGetFile);
+			var fileName = document.getElementById('downloadname').value;
+			SaveToDisk1(fileURL, fileName);
+			return true;
+		}catch(e){
+			return false;
+		}		
+	}
+	
+	function SaveToDisk1(fileURL, fileName) {
+    // for non-IE
+    if (!window.ActiveXObject) {
+        var save = document.createElement('a');
+        save.href = fileURL;
+        save.target = '_blank';
+        save.download = fileName || 'unknown';
+
+        var event = document.createEvent('Event');
+        event.initEvent('click', true, true);
+        save.dispatchEvent(event);
+        (window.URL || window.webkitURL).revokeObjectURL(save.href);
+		}
+
+		// for IE
+		else if ( !! window.ActiveXObject && document.execCommand)     {
+			var _window = window.open(fileURL, '_blank');
+			_window.document.close();
+			_window.document.execCommand('SaveAs', true, fileName || fileURL)
+			_window.close();
+		}
+	}
+
+
+	function SaveToDisk2(fileURL, fileName) {
+		// for non-IE
+		if (!window.ActiveXObject) {
+
+			var save = document.createElement('a');
+			save.href = fileURL;
+			save.target = '_blank';
+			save.download = fileName || fileURL;
+			var evt = document.createEvent('MouseEvents');
+			evt.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0,
+				false, false, false, false, 0, null);
+			save.dispatchEvent(evt);
+			(window.URL || window.webkitURL).revokeObjectURL(save.href);
+		}
+
+		// for IE
+		else if ( !! window.ActiveXObject && document.execCommand)     {
+
+			var _window = window.open(fileURL, "_blank");
+			_window.document.close();
+			_window.document.execCommand('SaveAs', true, fileName || fileURL)
+			_window.close();
+		}
+	}
+		
+	function attempt(){
+		if(document.getElementById("downloadname").value != '')
+			document.getElementById('download').disabled = false;
+		else
+			document.getElementById('download').disabled = true;
+	}
+	
 	</script>
 
 </head>
@@ -484,27 +629,54 @@
 	<div class="navbar navbar-default" id="mainbrand">
 		<div class="navbar-inner">
 			<p class="navbar-text pull-left" id="inbrand1">
-				Base name: <a  class="navbar-link" id="basename"></a>
+				Имя базы : <a  class="navbar-link" id="basename"></a>   
 			</p>
 			<p class="navbar-text pull-left" id="inbrand1">
-				Base version: <a  class="navbar-link" id="baseversion"></a>
+				Версия базы : <a  class="navbar-link" id="baseversion"></a>
 			</p>
 			<p class="navbar-text pull-right" id="inbrand2">
-				Logged in as <a  class="navbar-link" id="username"></a>
-			</p>
-
+				Пользователь : <a  class="navbar-link" id="username"></a>
+			</p>	
+			<!-- Button trigger modal -->
+			<button class="btn btn-lg pull-center" id="downloadButton" data-toggle="modal" data-target="#myModal">
+					Загрузить документ
+			</button>
 		</div>
 	</div>	
-		<ol class="breadcrumb" id="navigation">
+	<div id="header">
 
-		</ol>
-
-		<div class="main" id="main">
-
-			<div class="content foldersContent" id="content">
-				
+		<!-- Modal -->
+		<div class="modal fade" align="center" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" id="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h4 class="modal-title" id="myModalLabel">Сохранение документа</h4>
+				</div>
+				<div class="modal-body" align="left">
+					<p class="modal-body-text">
+					Файл будет сохранён в каталог, определённый в настройках браузера.
+					Пожалуйста, введите имя и расширение файла для сохранения.
+					</p>
+					<input class="modal-name" placeholder="Имя документа " required="required" autofocus="" onkeyup="attempt()" type="inputname" id="downloadname">
+					<p class="modal-body-name" id="modal-body-name" ></p>
+					<p class="modal-body-size" id="modal-body-modified"></p>
+					<p class="modal-body-size" id="modal-body-size"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+					<button type="button" class="btn btn-success" onclick="download()" disabled id="download">Сохранить документ</button>
+				</div>
 			</div>
+		  </div>
+		</div>
 
+	</div>
+		<ol class="breadcrumb" id="navigation">
+		</ol>
+		<div class="main" id="main">
+			<div class="content foldersContent" id="content">
+			</div>
 			<div class="clearfix"></div>
 			<div class="content documentsContent"></div>
 			<div class="clearfix"></div>
@@ -519,7 +691,7 @@
 	
 	// Устанавливаем обработчик события "popstate": 
 	window.addEventListener('popstate', function(event) { 
-	
+	if(window.flag){
 		//	получение размера списка			
 		var div = document.getElementById('navigation');
 		var length = document.getElementById('navigation').getElementsByTagName('li').length;
@@ -532,7 +704,7 @@
 			var partOflinkIntoBreadCrumbid = {};
 			
 			if(!tryFindPartId(idNewLastElement, partOflinkIntoBreadCrumbid)){
-				alert('Can\'t find id');
+				alert('Не удалось найти id элемента');
 				return;
 			}				
 			// получение ids	
@@ -546,13 +718,13 @@
 			// изменение url
 			history.pushState(null, null, "?id=" + ids);
 		}
-  
+    }
+	window.flag = true;
 	},  false); 
 	
 	LoadRootObjects();
-	
-
-	
+	window.flag = true;
+	document.getElementById('downloadButton').style.visibility = "hidden";
 </script>
 
 </body>

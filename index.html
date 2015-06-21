@@ -23,7 +23,7 @@
             var password = document.getElementById("password").value;
             var useWinAuth = false;
 			document.cookie = "baseName=" + database;
-			document.getElementById('connection').innerHTML = 'Connecting...';
+			document.getElementById('connection').innerHTML = 'Подключение...';
 			control.connectToDatabase(api.currentHost, database, login, password, useWinAuth);
 				
         }
@@ -52,22 +52,22 @@
 
     <div class="container" id="main">
 		<h2 align="center">
-        <tt  class="mainhead" id="pilotversion"> Please wait a moment. I am defining the version of Pilot-Server </tt>
+        <tt  class="mainhead" id="pilotversion"> Пожалуйста, подождите... Определени версии Pilot-Server </tt>
 		</h2>
 
 		<div align="center" class="form-signin">
 			<br><br/>
 			<h4 class="form-signin-wrong" id="wrong" align="left"></h4>
-			<h4 class="form-signin-heading" align="left">Base name</h4>
-			<input class="form-control" placeholder="Base name" onkeyup ="attempt()" required="required" autofocus="" type="database" id="database">
-			<h4 class="form-signin-heading" align="left">Account</h4>
-			<input class="form-control" placeholder="Username" onkeyup ="attempt()" required="required" type="login" id="login">
-			<input class="form-control" placeholder="Password" onkeyup ="attempt()" required="required" type="password" id="password">
+			<h4 class="form-signin-heading" align="left">Имя базы</h4>
+			<input class="form-control" placeholder="Имя базы" onkeyup ="attempt()" required="required" autofocus="" type="database" id="database">
+			<h4 class="form-signin-heading" align="left">Учётная запись</h4>
+			<input class="form-control" placeholder="Имя пользователя" onkeyup ="attempt()" required="required" type="login" id="login">
+			<input class="form-control" placeholder="Пароль" onkeyup ="attempt()" required="required" type="password" id="password">
 			
 			<div class="row-fluid">
   					<h4 class="form-signin-connection" id="connection" align="left">  </h4>
   					<div align="right">
-						<button class="btn btn-lg btn-primary btn-block" disabled type="submit" onclick="connect()" id="btn">Login</button>
+						<button class="btn btn-lg btn-primary btn-block" disabled type="submit" onclick="connect()" id="btn">Войти</button>
 					</div>	
 		    </div>
 		</div>

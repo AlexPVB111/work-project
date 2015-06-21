@@ -124,10 +124,12 @@ cursor: pointer;
     height: 14px;
 
 }
+/*
 .folder input  :hover +.folderLink {
 }
+*/
 .folder:hover {
-cursor: pointer;
+	cursor: pointer;
 }
 
 .folder:hover  .folderLink { 
@@ -154,4 +156,23 @@ cursor: pointer;
 }
 #mainbrand{
 	background: #F5F5F5;
+}
+.modal-body {
+	margin: 20px;
+	font-size:12pt;
+}
+.modal-name {
+	width: 350px;
+}
+#downloadButton{
+	display: inline;
+	font-size: 16px;
+	position: relative;
+	float: left;
+	margin-left: 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.modal-body-text, .modal-name, .modal-body-name, .modal-body-modified, .modal-body-size{
+	margin: 20px;
 }
